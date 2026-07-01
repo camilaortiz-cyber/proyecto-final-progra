@@ -1,2 +1,4 @@
 # proyecto-final-progra
-Proyecto final de programación enfocado en el desarrollo de una solución de software para resolver necesidades reales del entorno empresarial.  
+## Plataforma Financiera Modular para PYMES
+
+Proyecto final de Fundamentos de Programación que consiste en el desarrollo de una plataforma web de gestión financiera modular para PYMES. El sistema permite administrar ingresos, gastos, flujo de caja y reportes mediante módulos configurables, incorporando autenticación, roles de usuario, dashboard personalizado y una arquitectura escalable para futuras funcionalidades.
