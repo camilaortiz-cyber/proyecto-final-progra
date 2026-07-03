@@ -15,8 +15,18 @@ def crear_meta(usuario_actual):
     print("2. ahorro")
     print("3. utilidad")
 
-    tipo = input("Tipo de meta: ").lower()
-    descripcion = input("Descripcion de la meta: ")
+    tipo_opcion = input("Tipo de meta: ").lower().strip()
+
+    if tipo_opcion == "1":
+        tipo = "ventas"
+    elif tipo_opcion == "2":
+        tipo = "ahorro"
+    elif tipo_opcion == "3":
+        tipo = "utilidad"
+    else:
+        tipo = tipo_opcion
+
+    descripcion = input("Descripcion de la meta: ").strip()
 
     try:
         monto = float(input("Monto objetivo: Q"))
@@ -33,6 +43,9 @@ def crear_meta(usuario_actual):
         return False
 
     metas = leer_json(RUTA_METAS)
+
+    if not isinstance(metas, list):
+        metas = []
 
     meta = {
         "tipo": tipo,
@@ -77,6 +90,10 @@ def ver_progreso_metas():
     metas = leer_json(RUTA_METAS)
 
     print("\n===== PROGRESO DE METAS =====")
+
+    if not isinstance(metas, list):
+        print("El archivo de metas no tiene formato valido.")
+        return
 
     if len(metas) == 0:
         print("No hay metas registradas.")

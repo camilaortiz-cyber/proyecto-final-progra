@@ -1,1 +1,8 @@
-[]
+[
+    {
+        "tipo": "ahorro",
+        "descripcion": "salario",
+        "monto": 90000.0,
+        "creado_por": "admin"
+    }
+]
