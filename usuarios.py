@@ -51,12 +51,23 @@ def tiene_permiso(usuario, modulo):
             "configuracion",
             "usuarios",
             "auditoria"
+            "empresas",
+            "clientes",
+            "proveedores",
+            "presupuestos",
+            "metas",
+            "alertas"
         ],
         "gerente": [
             "dashboard",
             "flujo_caja",
             "reportes",
             "ia_financiera"
+            "clientes",
+            "proveedores",
+            "presupuestos",
+            "metas",
+            "alertas"
         ],
         "contador": [
             "dashboard",
