@@ -503,6 +503,129 @@
                 </div>
             </div>
         </section>
+<section class="interactive-app-section" id="app-demo">
+    <div class="section-heading reveal">
+        <p class="eyebrow">Demo funcional</p>
+        <h2>Prueba el cerebro visual de FinFlow.</h2>
+        <p>
+            Esta demo permite registrar ingresos y gastos directamente en la página,
+            calcular utilidad y activar módulos visualmente. Los datos se guardan en el navegador.
+        </p>
+    </div>
+
+    <div class="app-lab reveal">
+        <div class="app-lab-sidebar">
+            <div class="app-user-card">
+                <span class="app-avatar">F</span>
+                <div>
+                    <strong>FinFlow Demo</strong>
+                    <p>Empresa: PYME Premium</p>
+                </div>
+            </div>
+
+            <div class="module-switches">
+                <h3>Módulos activos</h3>
+
+                <label>
+                    <input type="checkbox" class="module-toggle" value="Dashboard" checked>
+                    Dashboard
+                </label>
+
+                <label>
+                    <input type="checkbox" class="module-toggle" value="Ingresos" checked>
+                    Ingresos
+                </label>
+
+                <label>
+                    <input type="checkbox" class="module-toggle" value="Gastos" checked>
+                    Gastos
+                </label>
+
+                <label>
+                    <input type="checkbox" class="module-toggle" value="Reportes" checked>
+                    Reportes
+                </label>
+
+                <label>
+                    <input type="checkbox" class="module-toggle" value="IA financiera">
+                    IA financiera
+                </label>
+
+                <label>
+                    <input type="checkbox" class="module-toggle" value="Inventario">
+                    Inventario
+                </label>
+            </div>
+
+            <button class="reset-demo-button" id="resetDemoButton">
+                Reiniciar demo
+            </button>
+        </div>
+
+        <div class="app-lab-main">
+            <div class="app-lab-top">
+                <div>
+                    <span>Utilidad actual</span>
+                    <h3 id="demoProfit">Q 0</h3>
+                </div>
+
+                <div class="active-module-pill" id="activeModulePill">
+                    4 módulos activos
+                </div>
+            </div>
+
+            <div class="app-metrics-grid">
+                <article>
+                    <span>Total ingresos</span>
+                    <strong id="demoIncomeTotal">Q 0</strong>
+                </article>
+
+                <article>
+                    <span>Total gastos</span>
+                    <strong id="demoExpenseTotal">Q 0</strong>
+                </article>
+
+                <article>
+                    <span>Movimientos</span>
+                    <strong id="demoMovementCount">0</strong>
+                </article>
+            </div>
+
+            <div class="app-form-grid">
+                <form class="movement-form" id="incomeForm">
+                    <h3>Registrar ingreso</h3>
+
+                    <input type="text" id="incomeDescription" placeholder="Descripción del ingreso">
+                    <input type="text" id="incomeCategory" placeholder="Categoría">
+                    <input type="number" id="incomeAmount" placeholder="Monto en Q">
+
+                    <button type="submit">Agregar ingreso</button>
+                </form>
+
+                <form class="movement-form" id="expenseForm">
+                    <h3>Registrar gasto</h3>
+
+                    <input type="text" id="expenseDescription" placeholder="Descripción del gasto">
+                    <input type="text" id="expenseCategory" placeholder="Categoría">
+                    <input type="number" id="expenseAmount" placeholder="Monto en Q">
+
+                    <button type="submit">Agregar gasto</button>
+                </form>
+            </div>
+
+            <div class="movement-panel">
+                <div class="movement-panel-header">
+                    <h3>Movimientos recientes</h3>
+                    <span id="demoStatus">Demo lista</span>
+                </div>
+
+                <div class="movement-list" id="movementList">
+                    <p class="empty-demo-message">Todavía no hay movimientos registrados.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
 
         <section class="closing-section">
             <div class="closing-card reveal">
