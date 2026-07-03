@@ -1,5 +1,6 @@
 from datetime import datetime
 from data_manager import leer_json, guardar_json
+from auditoria import registrar_auditoria
 
 
 RUTA_INGRESOS = "data/ingresos.json"
@@ -9,36 +10,60 @@ RUTA_GASTOS = "data/gastos.json"
 def pedir_monto():
     try:
         monto = float(input("Monto: Q"))
+
         if monto <= 0:
             print("El monto debe ser mayor a cero.")
             return None
+
         return monto
+
     except ValueError:
         print("El monto debe ser un número válido.")
         return None
 
 
-def registrar_ingreso(usuario):
-    print("\n===== REGISTRAR INGRESO =====")
-
-    descripcion = input("Descripción del ingreso: ")
+def pedir_datos_movimiento(tipo):
+    descripcion = input("Descripción del " + tipo + ": ")
     categoria = input("Categoría: ")
     monto = pedir_monto()
 
-    if monto is None:
-        return False
+    if descripcion == "":
+        print("La descripción no puede estar vacía.")
+        return None
 
-    ingreso = {
+    if categoria == "":
+        print("La categoría no puede estar vacía.")
+        return None
+
+    if monto is None:
+        return None
+
+    movimiento = {
         "descripcion": descripcion,
         "categoria": categoria,
         "monto": monto,
-        "fecha": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-        "creado_por": usuario["usuario"]
+        "fecha": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     }
+
+    return movimiento
+
+
+def registrar_ingreso(usuario):
+    print("\n===== REGISTRAR INGRESO =====")
+
+    ingreso = pedir_datos_movimiento("ingreso")
+
+    if ingreso is None:
+        return False
+
+    ingreso["creado_por"] = usuario["usuario"]
 
     ingresos = leer_json(RUTA_INGRESOS)
     ingresos.append(ingreso)
     guardar_json(RUTA_INGRESOS, ingresos)
+
+    detalle = "Registró ingreso de Q" + str(ingreso["monto"]) + " en categoría " + ingreso["categoria"] + "."
+    registrar_auditoria(usuario, "Registro de ingreso", detalle)
 
     print("Ingreso registrado correctamente.")
     return True
@@ -47,24 +72,19 @@ def registrar_ingreso(usuario):
 def registrar_gasto(usuario):
     print("\n===== REGISTRAR GASTO =====")
 
-    descripcion = input("Descripción del gasto: ")
-    categoria = input("Categoría: ")
-    monto = pedir_monto()
+    gasto = pedir_datos_movimiento("gasto")
 
-    if monto is None:
+    if gasto is None:
         return False
 
-    gasto = {
-        "descripcion": descripcion,
-        "categoria": categoria,
-        "monto": monto,
-        "fecha": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-        "creado_por": usuario["usuario"]
-    }
+    gasto["creado_por"] = usuario["usuario"]
 
     gastos = leer_json(RUTA_GASTOS)
     gastos.append(gasto)
     guardar_json(RUTA_GASTOS, gastos)
+
+    detalle = "Registró gasto de Q" + str(gasto["monto"]) + " en categoría " + gasto["categoria"] + "."
+    registrar_auditoria(usuario, "Registro de gasto", detalle)
 
     print("Gasto registrado correctamente.")
     return True

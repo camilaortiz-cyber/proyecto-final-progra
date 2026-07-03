@@ -39,7 +39,7 @@ def mostrar_movimientos():
         print("No hay ingresos registrados.")
     else:
         for ingreso in ingresos:
-            print(ingreso["fecha"], "-", ingreso["descripcion"], "-", ingreso["categoria"], "- Q", ingreso["monto"])
+            print(ingreso["fecha"], "-", ingreso["descripcion"], "-", ingreso["categoria"], "- Q", ingreso["monto"], "- creado por:", ingreso["creado_por"])
 
     print("\n===== GASTOS =====")
 
@@ -47,7 +47,7 @@ def mostrar_movimientos():
         print("No hay gastos registrados.")
     else:
         for gasto in gastos:
-            print(gasto["fecha"], "-", gasto["descripcion"], "-", gasto["categoria"], "- Q", gasto["monto"])
+            print(gasto["fecha"], "-", gasto["descripcion"], "-", gasto["categoria"], "- Q", gasto["monto"], "- creado por:", gasto["creado_por"])
 
 
 def total_por_categoria(movimientos):
@@ -75,3 +75,78 @@ def mostrar_gastos_por_categoria():
     else:
         for categoria, total in categorias.items():
             print(categoria, ": Q", total)
+
+
+def mostrar_ingresos_por_categoria():
+    ingresos = leer_json(RUTA_INGRESOS)
+    categorias = total_por_categoria(ingresos)
+
+    print("\n===== INGRESOS POR CATEGORÍA =====")
+
+    if len(categorias) == 0:
+        print("No hay datos para mostrar.")
+    else:
+        for categoria, total in categorias.items():
+            print(categoria, ": Q", total)
+
+
+def reporte_por_usuario():
+    ingresos = leer_json(RUTA_INGRESOS)
+    gastos = leer_json(RUTA_GASTOS)
+
+    usuarios = {}
+
+    for ingreso in ingresos:
+        creador = ingreso["creado_por"]
+
+        if creador not in usuarios:
+            usuarios[creador] = {"ingresos": 0, "gastos": 0}
+
+        usuarios[creador]["ingresos"] = usuarios[creador]["ingresos"] + ingreso["monto"]
+
+    for gasto in gastos:
+        creador = gasto["creado_por"]
+
+        if creador not in usuarios:
+            usuarios[creador] = {"ingresos": 0, "gastos": 0}
+
+        usuarios[creador]["gastos"] = usuarios[creador]["gastos"] + gasto["monto"]
+
+    print("\n===== REPORTE POR USUARIO =====")
+
+    if len(usuarios) == 0:
+        print("No hay movimientos registrados.")
+        return
+
+    for usuario, datos in usuarios.items():
+        utilidad = datos["ingresos"] - datos["gastos"]
+
+        print("--------------------------------")
+        print("Usuario:", usuario)
+        print("Ingresos registrados: Q", datos["ingresos"])
+        print("Gastos registrados: Q", datos["gastos"])
+        print("Utilidad asociada: Q", utilidad)
+
+
+def buscar_movimiento():
+    ingresos = leer_json(RUTA_INGRESOS)
+    gastos = leer_json(RUTA_GASTOS)
+
+    palabra = input("Ingrese una palabra para buscar en la descripción: ").lower()
+
+    print("\n===== RESULTADOS DE BÚSQUEDA =====")
+
+    encontrado = False
+
+    for ingreso in ingresos:
+        if palabra in ingreso["descripcion"].lower():
+            print("[Ingreso]", ingreso["fecha"], "-", ingreso["descripcion"], "- Q", ingreso["monto"])
+            encontrado = True
+
+    for gasto in gastos:
+        if palabra in gasto["descripcion"].lower():
+            print("[Gasto]", gasto["fecha"], "-", gasto["descripcion"], "- Q", gasto["monto"])
+            encontrado = True
+
+    if not encontrado:
+        print("No se encontraron movimientos con esa palabra.")

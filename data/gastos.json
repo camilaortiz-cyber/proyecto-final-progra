@@ -1,1 +1,9 @@
-[]
+[
+    {
+        "descripcion": "Compra de hot dogs",
+        "categoria": "Gustos",
+        "monto": 35.0,
+        "fecha": "2026-07-03 01:53:58",
+        "creado_por": "admin"
+    }
+]
