@@ -189,3 +189,229 @@ for (let i = 0; i < magneticElements.length; i++) {
         magneticElements[i].style.transform = "translate(0, 0)";
     });
 }
+
+const incomeForm = document.getElementById("incomeForm");
+const expenseForm = document.getElementById("expenseForm");
+const incomeDescription = document.getElementById("incomeDescription");
+const incomeCategory = document.getElementById("incomeCategory");
+const incomeAmount = document.getElementById("incomeAmount");
+const expenseDescription = document.getElementById("expenseDescription");
+const expenseCategory = document.getElementById("expenseCategory");
+const expenseAmount = document.getElementById("expenseAmount");
+
+const demoIncomeTotal = document.getElementById("demoIncomeTotal");
+const demoExpenseTotal = document.getElementById("demoExpenseTotal");
+const demoProfit = document.getElementById("demoProfit");
+const demoMovementCount = document.getElementById("demoMovementCount");
+const movementList = document.getElementById("movementList");
+const demoStatus = document.getElementById("demoStatus");
+const moduleToggles = document.querySelectorAll(".module-toggle");
+const activeModulePill = document.getElementById("activeModulePill");
+const resetDemoButton = document.getElementById("resetDemoButton");
+
+let demoMovements = JSON.parse(localStorage.getItem("finflowDemoMovements")) || [];
+
+function saveDemoMovements() {
+    localStorage.setItem("finflowDemoMovements", JSON.stringify(demoMovements));
+}
+
+function formatCurrency(amount) {
+    return "Q " + Number(amount).toLocaleString("es-GT");
+}
+
+function calculateDemoTotals() {
+    let totalIncome = 0;
+    let totalExpense = 0;
+
+    for (let i = 0; i < demoMovements.length; i++) {
+        if (demoMovements[i].type === "income") {
+            totalIncome = totalIncome + demoMovements[i].amount;
+        } else if (demoMovements[i].type === "expense") {
+            totalExpense = totalExpense + demoMovements[i].amount;
+        }
+    }
+
+    return {
+        income: totalIncome,
+        expense: totalExpense,
+        profit: totalIncome - totalExpense
+    };
+}
+
+function renderDemoApp() {
+    const totals = calculateDemoTotals();
+
+    if (demoIncomeTotal) {
+        demoIncomeTotal.textContent = formatCurrency(totals.income);
+    }
+
+    if (demoExpenseTotal) {
+        demoExpenseTotal.textContent = formatCurrency(totals.expense);
+    }
+
+    if (demoProfit) {
+        demoProfit.textContent = formatCurrency(totals.profit);
+    }
+
+    if (demoMovementCount) {
+        demoMovementCount.textContent = demoMovements.length;
+    }
+
+    if (!movementList) {
+        return;
+    }
+
+    movementList.innerHTML = "";
+
+    if (demoMovements.length === 0) {
+        movementList.innerHTML = '<p class="empty-demo-message">Todavía no hay movimientos registrados.</p>';
+        return;
+    }
+
+    for (let i = demoMovements.length - 1; i >= 0; i--) {
+        const movement = demoMovements[i];
+        const item = document.createElement("div");
+        item.classList.add("movement-item");
+
+        const type = document.createElement("span");
+        type.classList.add("movement-type");
+
+        if (movement.type === "income") {
+            type.classList.add("income");
+            type.textContent = "Ingreso";
+        } else {
+            type.classList.add("expense");
+            type.textContent = "Gasto";
+        }
+
+        const detail = document.createElement("div");
+        detail.classList.add("movement-detail");
+        detail.innerHTML =
+            "<strong>" +
+            movement.description +
+            "</strong><span>" +
+            movement.category +
+            " · " +
+            movement.date +
+            "</span>";
+
+        const amount = document.createElement("div");
+        amount.classList.add("movement-amount");
+        amount.textContent = formatCurrency(movement.amount);
+
+        item.appendChild(type);
+        item.appendChild(detail);
+        item.appendChild(amount);
+
+        movementList.appendChild(item);
+    }
+}
+
+function addDemoMovement(type, description, category, amount) {
+    const movement = {
+        type: type,
+        description: description,
+        category: category,
+        amount: Number(amount),
+        date: new Date().toLocaleDateString("es-GT")
+    };
+
+    demoMovements.push(movement);
+    saveDemoMovements();
+    renderDemoApp();
+
+    if (demoStatus) {
+        if (type === "income") {
+            demoStatus.textContent = "Ingreso agregado correctamente";
+        } else {
+            demoStatus.textContent = "Gasto agregado correctamente";
+        }
+    }
+}
+
+if (incomeForm) {
+    incomeForm.addEventListener("submit", function (event) {
+        event.preventDefault();
+
+        if (
+            incomeDescription.value.trim() === "" ||
+            incomeCategory.value.trim() === "" ||
+            Number(incomeAmount.value) <= 0
+        ) {
+            if (demoStatus) {
+                demoStatus.textContent = "Complete correctamente el ingreso";
+            }
+            return;
+        }
+
+        addDemoMovement(
+            "income",
+            incomeDescription.value.trim(),
+            incomeCategory.value.trim(),
+            incomeAmount.value
+        );
+
+        incomeForm.reset();
+    });
+}
+
+if (expenseForm) {
+    expenseForm.addEventListener("submit", function (event) {
+        event.preventDefault();
+
+        if (
+            expenseDescription.value.trim() === "" ||
+            expenseCategory.value.trim() === "" ||
+            Number(expenseAmount.value) <= 0
+        ) {
+            if (demoStatus) {
+                demoStatus.textContent = "Complete correctamente el gasto";
+            }
+            return;
+        }
+
+        addDemoMovement(
+            "expense",
+            expenseDescription.value.trim(),
+            expenseCategory.value.trim(),
+            expenseAmount.value
+        );
+
+        expenseForm.reset();
+    });
+}
+
+function updateActiveModules() {
+    let activeCount = 0;
+
+    for (let i = 0; i < moduleToggles.length; i++) {
+        if (moduleToggles[i].checked) {
+            activeCount = activeCount + 1;
+        }
+    }
+
+    if (activeModulePill) {
+        activeModulePill.textContent = activeCount + " módulos activos";
+    }
+
+    localStorage.setItem("finflowActiveModules", activeCount);
+}
+
+for (let i = 0; i < moduleToggles.length; i++) {
+    moduleToggles[i].addEventListener("change", updateActiveModules);
+}
+
+if (resetDemoButton) {
+    resetDemoButton.addEventListener("click", function () {
+        demoMovements = [];
+        saveDemoMovements();
+        renderDemoApp();
+
+        if (demoStatus) {
+            demoStatus.textContent = "Demo reiniciada";
+        }
+    });
+}
+
+renderDemoApp();
+updateActiveModules();
