@@ -50,7 +50,8 @@ def tiene_permiso(usuario, modulo):
             "ia_financiera",
             "configuracion",
             "usuarios",
-            "auditoria"
+            "auditoria",
+            "sesiones",
             "empresas",
             "clientes",
             "proveedores",

@@ -1,3 +1,4 @@
+from sesiones import registrar_inicio_sesion, registrar_cierre_sesion, menu_sesiones
 from metas import menu_metas
 from alertas import mostrar_alertas
 from empresas import menu_empresas
@@ -79,7 +80,7 @@ def mostrar_menu_reportes():
             print("Opción inválida.")
 
 
-def mostrar_menu(usuario):
+def mostrar_menu(usuario, id_sesion):
     seguir = True
 
     while seguir:
@@ -115,9 +116,13 @@ def mostrar_menu(usuario):
 
         if tiene_permiso(usuario, "auditoria"):
             numero = agregar_opcion(opciones, numero, "Ver auditoría", "auditoria")
+        
+        if tiene_permiso(usuario, "sesiones"):
+            numero = agregar_opcion(opciones, numero, "Sesiones", "sesiones")
 
         if tiene_permiso(usuario, "configuracion"):
             numero = agregar_opcion(opciones, numero, "Configuración de módulos", "configuracion")
+        
 
         if modulos["empresas"] and tiene_permiso(usuario, "empresas"):
             numero = agregar_opcion(opciones, numero, "Empresas", "empresas")
@@ -142,6 +147,7 @@ def mostrar_menu(usuario):
         opcion = input("Seleccione una opción: ")
 
         if opcion == "0":
+            registrar_cierre_sesion(usuario, id_sesion)
             seguir = False
             print("Sesión cerrada.")
 
@@ -150,6 +156,9 @@ def mostrar_menu(usuario):
 
             if accion == "dashboard":
                 mostrar_dashboard(usuario)
+
+            elif accion == "sesiones":
+                menu_sesiones()
 
             elif accion == "ingresos":
                 registrar_ingreso(usuario)
@@ -203,7 +212,8 @@ def main():
     usuario = iniciar_sesion()
 
     if usuario is not None:
-        mostrar_menu(usuario)
+        id_sesion = registrar_inicio_sesion(usuario)
+        mostrar_menu(usuario, id_sesion)
     else:
         print("No se pudo iniciar sesión.")
 

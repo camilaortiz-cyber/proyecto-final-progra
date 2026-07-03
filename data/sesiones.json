@@ -1,0 +1,10 @@
+[
+    {
+        "id": 1,
+        "usuario": "admin",
+        "rol": "administrador",
+        "inicio": "2026-07-03 09:36:55",
+        "cierre": "Sesion activa",
+        "estado": "activa"
+    }
+]
