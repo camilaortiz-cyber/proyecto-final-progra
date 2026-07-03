@@ -1,8 +1,16 @@
-from usuarios import iniciar_sesion, mostrar_usuario, tiene_permiso
+from usuarios import iniciar_sesion, mostrar_usuario, tiene_permiso, menu_administracion_usuarios
 from modulos import obtener_modulos, configurar_modulos, mostrar_modulos_activos
 from finanzas import registrar_ingreso, registrar_gasto, mostrar_flujo_caja
-from reportes import mostrar_reporte_general, mostrar_movimientos, mostrar_gastos_por_categoria
+from reportes import (
+    mostrar_reporte_general,
+    mostrar_movimientos,
+    mostrar_gastos_por_categoria,
+    mostrar_ingresos_por_categoria,
+    reporte_por_usuario,
+    buscar_movimiento
+)
 from ia_financiera import asistente_financiero
+from auditoria import mostrar_auditoria
 
 
 def mostrar_bienvenida():
@@ -31,18 +39,34 @@ def mostrar_menu_reportes():
         print("1. Reporte general")
         print("2. Ver movimientos")
         print("3. Gastos por categoría")
+        print("4. Ingresos por categoría")
+        print("5. Reporte por usuario")
+        print("6. Buscar movimiento")
         print("0. Volver")
 
         opcion = input("Seleccione una opción: ")
 
         if opcion == "1":
             mostrar_reporte_general()
+
         elif opcion == "2":
             mostrar_movimientos()
+
         elif opcion == "3":
             mostrar_gastos_por_categoria()
+
+        elif opcion == "4":
+            mostrar_ingresos_por_categoria()
+
+        elif opcion == "5":
+            reporte_por_usuario()
+
+        elif opcion == "6":
+            buscar_movimiento()
+
         elif opcion == "0":
             break
+
         else:
             print("Opción inválida.")
 
@@ -78,6 +102,12 @@ def mostrar_menu(usuario):
         if modulos["ia_financiera"] and tiene_permiso(usuario, "ia_financiera"):
             numero = agregar_opcion(opciones, numero, "IA financiera", "ia_financiera")
 
+        if tiene_permiso(usuario, "usuarios"):
+            numero = agregar_opcion(opciones, numero, "Administrar usuarios", "usuarios")
+
+        if tiene_permiso(usuario, "auditoria"):
+            numero = agregar_opcion(opciones, numero, "Ver auditoría", "auditoria")
+
         if tiene_permiso(usuario, "configuracion"):
             numero = agregar_opcion(opciones, numero, "Configuración de módulos", "configuracion")
 
@@ -109,6 +139,12 @@ def mostrar_menu(usuario):
 
             elif accion == "ia_financiera":
                 asistente_financiero()
+
+            elif accion == "usuarios":
+                menu_administracion_usuarios(usuario)
+
+            elif accion == "auditoria":
+                mostrar_auditoria()
 
             elif accion == "configuracion":
                 configurar_modulos()

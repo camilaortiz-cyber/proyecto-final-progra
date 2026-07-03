@@ -1,0 +1,23 @@
+[
+    {
+        "usuario": "admin",
+        "rol": "administrador",
+        "accion": "Inicio de sesión",
+        "detalle": "El usuario ingresó al sistema.",
+        "fecha": "2026-07-03 01:53:12"
+    },
+    {
+        "usuario": "admin",
+        "rol": "administrador",
+        "accion": "Registro de ingreso",
+        "detalle": "Registró ingreso de Q4400.0 en categoría Salario.",
+        "fecha": "2026-07-03 01:53:32"
+    },
+    {
+        "usuario": "admin",
+        "rol": "administrador",
+        "accion": "Registro de gasto",
+        "detalle": "Registró gasto de Q35.0 en categoría Gustos.",
+        "fecha": "2026-07-03 01:53:58"
+    }
+]
