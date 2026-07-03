@@ -1,0 +1,12 @@
+{
+    "dashboard": true,
+    "ingresos": true,
+    "gastos": true,
+    "flujo_caja": true,
+    "reportes": true,
+    "ia_financiera": true,
+    "inventario": false,
+    "facturacion": false,
+    "prestamos": false,
+    "nomina": false
+}
