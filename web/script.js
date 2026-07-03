@@ -190,14 +190,22 @@ for (let i = 0; i < magneticElements.length; i++) {
     });
 }
 
+/* =========================================================
+   FINFLOW WEB APP DEMO
+   Dashboard fijo + módulos dinámicos
+========================================================= */
+
+const STORAGE_KEY_MODULES = "finflowActiveModules";
+const STORAGE_KEY_MOVEMENTS = "finflowDemoMovements";
+
+const moduleToggles = document.querySelectorAll(".module-toggle");
+const moduleSections = document.querySelectorAll(".module-section");
+const activeModulePill = document.getElementById("activeModulePill");
+const emptyModulesState = document.getElementById("emptyModulesState");
+const resetDemoButton = document.getElementById("resetDemoButton");
+
 const incomeForm = document.getElementById("incomeForm");
 const expenseForm = document.getElementById("expenseForm");
-const incomeDescription = document.getElementById("incomeDescription");
-const incomeCategory = document.getElementById("incomeCategory");
-const incomeAmount = document.getElementById("incomeAmount");
-const expenseDescription = document.getElementById("expenseDescription");
-const expenseCategory = document.getElementById("expenseCategory");
-const expenseAmount = document.getElementById("expenseAmount");
 
 const demoIncomeTotal = document.getElementById("demoIncomeTotal");
 const demoExpenseTotal = document.getElementById("demoExpenseTotal");
@@ -205,18 +213,15 @@ const demoProfit = document.getElementById("demoProfit");
 const demoMovementCount = document.getElementById("demoMovementCount");
 const movementList = document.getElementById("movementList");
 const demoStatus = document.getElementById("demoStatus");
-const moduleToggles = document.querySelectorAll(".module-toggle");
-const activeModulePill = document.getElementById("activeModulePill");
-const resetDemoButton = document.getElementById("resetDemoButton");
 
-let demoMovements = JSON.parse(localStorage.getItem("finflowDemoMovements")) || [];
-
-function saveDemoMovements() {
-    localStorage.setItem("finflowDemoMovements", JSON.stringify(demoMovements));
-}
+let demoMovements = JSON.parse(localStorage.getItem(STORAGE_KEY_MOVEMENTS)) || [];
 
 function formatCurrency(amount) {
     return "Q " + Number(amount).toLocaleString("es-GT");
+}
+
+function saveDemoMovements() {
+    localStorage.setItem(STORAGE_KEY_MOVEMENTS, JSON.stringify(demoMovements));
 }
 
 function calculateDemoTotals() {
@@ -270,6 +275,7 @@ function renderDemoApp() {
 
     for (let i = demoMovements.length - 1; i >= 0; i--) {
         const movement = demoMovements[i];
+
         const item = document.createElement("div");
         item.classList.add("movement-item");
 
@@ -329,28 +335,92 @@ function addDemoMovement(type, description, category, amount) {
     }
 }
 
+function getActiveModules() {
+    const saved = localStorage.getItem(STORAGE_KEY_MODULES);
+
+    if (!saved) {
+        return [];
+    }
+
+    try {
+        const parsed = JSON.parse(saved);
+
+        if (Array.isArray(parsed)) {
+            return parsed;
+        }
+
+        return [];
+    } catch (error) {
+        return [];
+    }
+}
+
+function saveActiveModules(activeModules) {
+    localStorage.setItem(STORAGE_KEY_MODULES, JSON.stringify(activeModules));
+}
+
+function renderModules() {
+    const activeModules = [];
+
+    for (let i = 0; i < moduleToggles.length; i++) {
+        if (moduleToggles[i].checked) {
+            activeModules.push(moduleToggles[i].value);
+        }
+    }
+
+    for (let i = 0; i < moduleSections.length; i++) {
+        const sectionModule = moduleSections[i].dataset.module;
+        const isActive = activeModules.includes(sectionModule);
+
+        if (isActive) {
+            moduleSections[i].classList.remove("hidden");
+        } else {
+            moduleSections[i].classList.add("hidden");
+        }
+    }
+
+    if (activeModulePill) {
+        activeModulePill.textContent = activeModules.length + " módulos activos";
+    }
+
+    if (emptyModulesState) {
+        if (activeModules.length === 0) {
+            emptyModulesState.classList.add("visible");
+        } else {
+            emptyModulesState.classList.remove("visible");
+        }
+    }
+
+    saveActiveModules(activeModules);
+}
+
+function restoreModules() {
+    const activeModules = getActiveModules();
+
+    for (let i = 0; i < moduleToggles.length; i++) {
+        moduleToggles[i].checked = activeModules.includes(moduleToggles[i].value);
+        moduleToggles[i].addEventListener("change", renderModules);
+    }
+
+    renderModules();
+}
+
 if (incomeForm) {
     incomeForm.addEventListener("submit", function (event) {
         event.preventDefault();
 
-        if (
-            incomeDescription.value.trim() === "" ||
-            incomeCategory.value.trim() === "" ||
-            Number(incomeAmount.value) <= 0
-        ) {
+        const incomeDescription = document.getElementById("incomeDescription").value.trim();
+        const incomeCategory = document.getElementById("incomeCategory").value.trim();
+        const incomeAmount = Number(document.getElementById("incomeAmount").value);
+
+        if (!incomeDescription || !incomeCategory || incomeAmount <= 0) {
             if (demoStatus) {
                 demoStatus.textContent = "Complete correctamente el ingreso";
             }
             return;
         }
 
-        addDemoMovement(
-            "income",
-            incomeDescription.value.trim(),
-            incomeCategory.value.trim(),
-            incomeAmount.value
-        );
-
+        addDemoMovement("income", incomeDescription, incomeCategory, incomeAmount);
         incomeForm.reset();
     });
 }
@@ -359,53 +429,35 @@ if (expenseForm) {
     expenseForm.addEventListener("submit", function (event) {
         event.preventDefault();
 
-        if (
-            expenseDescription.value.trim() === "" ||
-            expenseCategory.value.trim() === "" ||
-            Number(expenseAmount.value) <= 0
-        ) {
+        const expenseDescription = document.getElementById("expenseDescription").value.trim();
+        const expenseCategory = document.getElementById("expenseCategory").value.trim();
+        const expenseAmount = Number(document.getElementById("expenseAmount").value);
+
+        if (!expenseDescription || !expenseCategory || expenseAmount <= 0) {
             if (demoStatus) {
                 demoStatus.textContent = "Complete correctamente el gasto";
             }
             return;
         }
 
-        addDemoMovement(
-            "expense",
-            expenseDescription.value.trim(),
-            expenseCategory.value.trim(),
-            expenseAmount.value
-        );
-
+        addDemoMovement("expense", expenseDescription, expenseCategory, expenseAmount);
         expenseForm.reset();
     });
-}
-
-function updateActiveModules() {
-    let activeCount = 0;
-
-    for (let i = 0; i < moduleToggles.length; i++) {
-        if (moduleToggles[i].checked) {
-            activeCount = activeCount + 1;
-        }
-    }
-
-    if (activeModulePill) {
-        activeModulePill.textContent = activeCount + " módulos activos";
-    }
-
-    localStorage.setItem("finflowActiveModules", activeCount);
-}
-
-for (let i = 0; i < moduleToggles.length; i++) {
-    moduleToggles[i].addEventListener("change", updateActiveModules);
 }
 
 if (resetDemoButton) {
     resetDemoButton.addEventListener("click", function () {
         demoMovements = [];
         saveDemoMovements();
+
+        localStorage.removeItem(STORAGE_KEY_MODULES);
+
+        for (let i = 0; i < moduleToggles.length; i++) {
+            moduleToggles[i].checked = false;
+        }
+
         renderDemoApp();
+        renderModules();
 
         if (demoStatus) {
             demoStatus.textContent = "Demo reiniciada";
@@ -414,4 +466,5 @@ if (resetDemoButton) {
 }
 
 renderDemoApp();
-updateActiveModules();
+restoreModules();
+
