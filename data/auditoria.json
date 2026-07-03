@@ -19,5 +19,12 @@
         "accion": "Registro de gasto",
         "detalle": "Registró gasto de Q35.0 en categoría Gustos.",
         "fecha": "2026-07-03 01:53:58"
+    },
+    {
+        "usuario": "admin",
+        "rol": "administrador",
+        "accion": "Inicio de sesión",
+        "detalle": "El usuario ingresó al sistema.",
+        "fecha": "2026-07-03 02:25:54"
     }
 ]

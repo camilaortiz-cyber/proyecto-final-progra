@@ -1,3 +1,9 @@
+from empresas import menu_empresas
+from clientes import menu_clientes
+from proveedores import menu_proveedores
+from presupuestos import menu_presupuestos
+from metas import menu_metas
+from alertas import mostrar_alertas
 from usuarios import iniciar_sesion, mostrar_usuario, tiene_permiso, menu_administracion_usuarios
 from modulos import obtener_modulos, configurar_modulos, mostrar_modulos_activos
 from finanzas import registrar_ingreso, registrar_gasto, mostrar_flujo_caja
@@ -102,6 +108,24 @@ def mostrar_menu(usuario):
         if modulos["ia_financiera"] and tiene_permiso(usuario, "ia_financiera"):
             numero = agregar_opcion(opciones, numero, "IA financiera", "ia_financiera")
 
+        if modulos["empresas"] and tiene_permiso(usuario, "empresas"):
+            numero = agregar_opcion(opciones, numero, "Empresas", "empresas")
+
+        if modulos["clientes"] and tiene_permiso(usuario, "clientes"):
+            numero = agregar_opcion(opciones, numero, "Clientes", "clientes")
+
+        if modulos["proveedores"] and tiene_permiso(usuario, "proveedores"):
+            numero = agregar_opcion(opciones, numero, "Proveedores", "proveedores")
+
+        if modulos["presupuestos"] and tiene_permiso(usuario, "presupuestos"):
+            numero = agregar_opcion(opciones, numero, "Presupuestos", "presupuestos")
+
+        if modulos["metas"] and tiene_permiso(usuario, "metas"):
+            numero = agregar_opcion(opciones, numero, "Metas financieras", "metas")
+
+        if modulos["alertas"] and tiene_permiso(usuario, "alertas"):
+            numero = agregar_opcion(opciones, numero, "Alertas inteligentes", "alertas")
+
         if tiene_permiso(usuario, "usuarios"):
             numero = agregar_opcion(opciones, numero, "Administrar usuarios", "usuarios")
 
@@ -148,6 +172,24 @@ def mostrar_menu(usuario):
 
             elif accion == "configuracion":
                 configurar_modulos()
+
+            elif accion == "empresas":
+                menu_empresas(usuario)
+
+            elif accion == "clientes":
+                menu_clientes(usuario)
+
+            elif accion == "proveedores":
+                menu_proveedores(usuario)
+
+            elif accion == "presupuestos":
+                menu_presupuestos(usuario)
+
+            elif accion == "metas":
+                menu_metas(usuario)
+
+            elif accion == "alertas":
+                mostrar_alertas()
 
         else:
             print("Opción inválida.")

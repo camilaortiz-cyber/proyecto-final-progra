@@ -38,7 +38,7 @@ def mostrar_usuario(usuario_actual):
 
 
 def tiene_permiso(usuario, modulo):
-    rol = usuario["rol"]
+    rol = usuario["rol"]    
 
     permisos = {
         "administrador": [
@@ -51,6 +51,12 @@ def tiene_permiso(usuario, modulo):
             "configuracion",
             "usuarios",
             "auditoria"
+            "empresas",
+            "clientes",
+            "proveedores",
+            "presupuestos",
+            "metas",
+            "alertas"
         ],
         "gerente": [
             "dashboard",
