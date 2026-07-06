@@ -509,7 +509,8 @@
         <h2>Prueba el cerebro visual de FinFlow.</h2>
         <p>
             Esta demo permite registrar ingresos y gastos directamente en la página,
-            calcular utilidad y activar módulos visualmente. Los datos se guardan en el navegador.
+            calcular utilidad y activar módulos visualmente. El Dashboard siempre está visible
+            como pantalla principal, y el resto de módulos aparecen o desaparecen según tu selección.
         </p>
     </div>
 
@@ -527,32 +528,52 @@
                 <h3>Módulos activos</h3>
 
                 <label>
-                    <input type="checkbox" class="module-toggle" value="Dashboard" checked>
-                    Dashboard
-                </label>
-
-                <label>
-                    <input type="checkbox" class="module-toggle" value="Ingresos" checked>
+                    <input type="checkbox" class="module-toggle" value="ingresos">
                     Ingresos
                 </label>
 
                 <label>
-                    <input type="checkbox" class="module-toggle" value="Gastos" checked>
+                    <input type="checkbox" class="module-toggle" value="gastos">
                     Gastos
                 </label>
 
                 <label>
-                    <input type="checkbox" class="module-toggle" value="Reportes" checked>
+                    <input type="checkbox" class="module-toggle" value="reportes">
                     Reportes
                 </label>
 
                 <label>
-                    <input type="checkbox" class="module-toggle" value="IA financiera">
+                    <input type="checkbox" class="module-toggle" value="ia">
                     IA financiera
                 </label>
 
                 <label>
-                    <input type="checkbox" class="module-toggle" value="Inventario">
+                    <input type="checkbox" class="module-toggle" value="clientes">
+                    Clientes
+                </label>
+
+                <label>
+                    <input type="checkbox" class="module-toggle" value="proveedores">
+                    Proveedores
+                </label>
+
+                <label>
+                    <input type="checkbox" class="module-toggle" value="presupuestos">
+                    Presupuestos
+                </label>
+
+                <label>
+                    <input type="checkbox" class="module-toggle" value="metas">
+                    Metas
+                </label>
+
+                <label>
+                    <input type="checkbox" class="module-toggle" value="alertas">
+                    Alertas
+                </label>
+
+                <label>
+                    <input type="checkbox" class="module-toggle" value="inventario">
                     Inventario
                 </label>
             </div>
@@ -563,71 +584,143 @@
         </div>
 
         <div class="app-lab-main">
-            <div class="app-lab-top">
-                <div>
-                    <span>Utilidad actual</span>
-                    <h3 id="demoProfit">Q 0</h3>
+            <section class="dashboard-panel" id="dashboardPanel">
+                <div class="app-lab-top">
+                    <div>
+                        <span>Home</span>
+                        <h3>Dashboard</h3>
+                    </div>
+
+                    <div class="active-module-pill" id="activeModulePill">
+                        0 módulos activos
+                    </div>
                 </div>
 
-                <div class="active-module-pill" id="activeModulePill">
-                    4 módulos activos
+                <div class="app-metrics-grid">
+                    <article>
+                        <span>Total ingresos</span>
+                        <strong id="demoIncomeTotal">Q 0</strong>
+                    </article>
+
+                    <article>
+                        <span>Total gastos</span>
+                        <strong id="demoExpenseTotal">Q 0</strong>
+                    </article>
+
+                    <article>
+                        <span>Movimientos</span>
+                        <strong id="demoMovementCount">0</strong>
+                    </article>
                 </div>
+            </section>
+
+            <div class="empty-modules-state" id="emptyModulesState">
+                Activa módulos en la barra izquierda para que aparezcan aquí.
             </div>
 
-            <div class="app-metrics-grid">
-                <article>
-                    <span>Total ingresos</span>
-                    <strong id="demoIncomeTotal">Q 0</strong>
-                </article>
+            <div class="modules-grid">
+                <section class="module-section" data-module="ingresos">
+                    <form class="movement-form" id="incomeForm">
+                        <h3>Registrar ingreso</h3>
+                        <input type="text" id="incomeDescription" placeholder="Descripción del ingreso">
+                        <input type="text" id="incomeCategory" placeholder="Categoría">
+                        <input type="number" id="incomeAmount" placeholder="Monto en Q">
+                        <button type="submit">Agregar ingreso</button>
+                    </form>
+                </section>
 
-                <article>
-                    <span>Total gastos</span>
-                    <strong id="demoExpenseTotal">Q 0</strong>
-                </article>
+                <section class="module-section" data-module="gastos">
+                    <form class="movement-form" id="expenseForm">
+                        <h3>Registrar gasto</h3>
+                        <input type="text" id="expenseDescription" placeholder="Descripción del gasto">
+                        <input type="text" id="expenseCategory" placeholder="Categoría">
+                        <input type="number" id="expenseAmount" placeholder="Monto en Q">
+                        <button type="submit">Agregar gasto</button>
+                    </form>
+                </section>
 
-                <article>
-                    <span>Movimientos</span>
-                    <strong id="demoMovementCount">0</strong>
-                </article>
-            </div>
+                <section class="module-section" data-module="reportes">
+                    <div class="movement-panel">
+                        <div class="movement-panel-header">
+                            <h3>Movimientos recientes</h3>
+                            <span id="demoStatus">Demo lista</span>
+                        </div>
 
-            <div class="app-form-grid">
-                <form class="movement-form" id="incomeForm">
-                    <h3>Registrar ingreso</h3>
+                        <div class="movement-list" id="movementList">
+                            <p class="empty-demo-message">Todavía no hay movimientos registrados.</p>
+                        </div>
+                    </div>
+                </section>
 
-                    <input type="text" id="incomeDescription" placeholder="Descripción del ingreso">
-                    <input type="text" id="incomeCategory" placeholder="Categoría">
-                    <input type="number" id="incomeAmount" placeholder="Monto en Q">
+                <section class="module-section" data-module="ia">
+                    <div class="assistant-panel">
+                        <div class="assistant-header">
+                            <span class="assistant-dot"></span>
+                            <strong>FinFlow Assistant</strong>
+                        </div>
 
-                    <button type="submit">Agregar ingreso</button>
-                </form>
+                        <div class="chat-message user">
+                            ¿En qué gasté más este mes?
+                        </div>
 
-                <form class="movement-form" id="expenseForm">
-                    <h3>Registrar gasto</h3>
+                        <div class="chat-message bot" id="assistantLine">
+                            Su mayor gasto está en Servicios con Q 3,200. Recomendación:
+                            revisar pagos recurrentes y renegociar proveedores.
+                        </div>
 
-                    <input type="text" id="expenseDescription" placeholder="Descripción del gasto">
-                    <input type="text" id="expenseCategory" placeholder="Categoría">
-                    <input type="number" id="expenseAmount" placeholder="Monto en Q">
+                        <div class="assistant-options">
+                            <button type="button">Utilidad</button>
+                            <button type="button">Gastos</button>
+                            <button type="button">Reportes</button>
+                        </div>
+                    </div>
+                </section>
 
-                    <button type="submit">Agregar gasto</button>
-                </form>
-            </div>
+                <section class="module-section" data-module="clientes">
+                    <article class="module-mini-card">
+                        <h3>Clientes</h3>
+                        <p>Registra clientes, contactos y su historial comercial.</p>
+                    </article>
+                </section>
 
-            <div class="movement-panel">
-                <div class="movement-panel-header">
-                    <h3>Movimientos recientes</h3>
-                    <span id="demoStatus">Demo lista</span>
-                </div>
+                <section class="module-section" data-module="proveedores">
+                    <article class="module-mini-card">
+                        <h3>Proveedores</h3>
+                        <p>Administra proveedores, productos y pagos relacionados.</p>
+                    </article>
+                </section>
 
-                <div class="movement-list" id="movementList">
-                    <p class="empty-demo-message">Todavía no hay movimientos registrados.</p>
-                </div>
+                <section class="module-section" data-module="presupuestos">
+                    <article class="module-mini-card">
+                        <h3>Presupuestos</h3>
+                        <p>Compara el presupuesto planificado contra la realidad.</p>
+                    </article>
+                </section>
+
+                <section class="module-section" data-module="metas">
+                    <article class="module-mini-card">
+                        <h3>Metas</h3>
+                        <p>Visualiza el progreso hacia ventas, ahorro o utilidad.</p>
+                    </article>
+                </section>
+
+                <section class="module-section" data-module="alertas">
+                    <article class="module-mini-card">
+                        <h3>Alertas</h3>
+                        <p>Detecta gastos altos, bajo flujo de caja y metas en riesgo.</p>
+                    </article>
+                </section>
+
+                <section class="module-section" data-module="inventario">
+                    <article class="module-mini-card">
+                        <h3>Inventario</h3>
+                        <p>Control básico para productos, stock y alertas futuras.</p>
+                    </article>
+                </section>
             </div>
         </div>
     </div>
-</section>
-
-        <section class="closing-section">
+</section> 
             <div class="closing-card reveal">
                 <p class="eyebrow">FinFlow</p>
                 <h2>Una forma más elegante de entender tu empresa.</h2>
