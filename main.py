@@ -243,11 +243,11 @@ def mostrar_menu(usuario, id_sesion):
 
             # Abre el asistente financiero.
             elif accion == "ia_financiera":
-            asistente_financiero(usuario)  # Envía el usuario actual para que la IA adapte sus respuestas según el rol.
+                asistente_financiero(usuario)  # Envía el usuario actual para que la IA adapte sus respuestas según el rol.
 
             # Abre el módulo de empresas.
             elif accion == "empresas":
-             menu_empresas(usuario)
+                menu_empresas(usuario)
 
             # Abre el módulo de clientes.
             elif accion == "clientes":
