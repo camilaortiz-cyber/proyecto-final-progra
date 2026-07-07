@@ -60,13 +60,27 @@
         "rol": "administrador",
         "accion": "Inicio de sesión",
         "detalle": "El usuario ingresó al sistema.",
-        "fecha": "2026-07-03 09:36:55"
+        "fecha": "2026-07-03 03:19:09"
     },
     {
         "usuario": "admin",
         "rol": "administrador",
-        "accion": "Inicio de sesion",
-        "detalle": "El usuario inicio la sesion #1.",
-        "fecha": "2026-07-03 09:36:55"
+        "accion": "Inicio de sesión",
+        "detalle": "El usuario ingresó al sistema.",
+        "fecha": "2026-07-03 09:00:56"
+    },
+    {
+        "usuario": "admin",
+        "rol": "administrador",
+        "accion": "Inicio de sesión",
+        "detalle": "El usuario ingresó al sistema.",
+        "fecha": "2026-07-03 09:13:25"
+    },
+    {
+        "usuario": "admin",
+        "rol": "administrador",
+        "accion": "Creacion de meta",
+        "detalle": "Se creo meta de ahorro por Q90000.0.",
+        "fecha": "2026-07-03 09:13:45"
     }
 ]
