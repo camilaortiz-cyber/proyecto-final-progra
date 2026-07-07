@@ -1,3 +1,4 @@
+
 # Importa funciones relacionadas con usuarios, inicio de sesión, permisos y administración.
 from usuarios import iniciar_sesion, mostrar_usuario, tiene_permiso, menu_administracion_usuarios
 
@@ -9,6 +10,9 @@ from finanzas import registrar_ingreso, registrar_gasto, mostrar_flujo_caja
 
 # Importa funciones para registrar inicio y cierre de sesión, además del menú de sesiones.
 from sesiones import registrar_inicio_sesion, registrar_cierre_sesion, menu_sesiones
+
+ # Importa la función que guarda inicio y cierre de sesión en Neon.
+from sesiones_db import registrar_sesion   
 
 # Importa diferentes funciones del módulo de reportes.
 from reportes import (
@@ -239,11 +243,11 @@ def mostrar_menu(usuario, id_sesion):
 
             # Abre el asistente financiero.
             elif accion == "ia_financiera":
-                asistente_financiero()
+            asistente_financiero(usuario)  # Envía el usuario actual para que la IA adapte sus respuestas según el rol.
 
             # Abre el módulo de empresas.
             elif accion == "empresas":
-                menu_empresas(usuario)
+             menu_empresas(usuario)
 
             # Abre el módulo de clientes.
             elif accion == "clientes":
@@ -294,16 +298,21 @@ def main():
     # Verifica si el inicio de sesión fue exitoso.
     if usuario is not None:
 
-        # Registra el inicio de sesión y obtiene el ID de la sesión.
+        # Guarda en Neon que el usuario inició sesión.
+        registrar_sesion(usuario, "inicio_sesion")
+
+        # Registra el inicio de sesión en el sistema local y obtiene el ID de la sesión.
         id_sesion = registrar_inicio_sesion(usuario)
 
-        # Muestra el menú principal del sistema.
+        # Muestra el menú principal del sistema usando el ID de sesión local.
         mostrar_menu(usuario, id_sesion)
+
+        # Guarda en Neon que el usuario cerró sesión.
+        registrar_sesion(usuario, "cierre_sesion")
 
     # Si el inicio de sesión falla, muestra un mensaje.
     else:
         print("No se pudo iniciar sesión.")
-
 
 # Ejecuta el programa solamente si este archivo se corre directamente.
 if __name__ == "__main__":
