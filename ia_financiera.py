@@ -487,204 +487,162 @@ def recomendacion_personalizada():
 
 
 # Muestra el menú interactivo de la IA financiera simulada.
-def asistente_financiero():
+def asistente_financiero(usuario_actual):  # Muestra el asistente financiero adaptado al rol del usuario.
+    rol = usuario_actual["rol"]  # Obtiene el rol del usuario que está usando la IA.
 
-    # Mantiene el menú activo hasta que el usuario decida volver.
-    while True:
+    while True:  # Mantiene el menú de IA abierto hasta que el usuario elija volver.
 
-        # Lee los ingresos registrados.
-        ingresos = leer_json(RUTA_INGRESOS)
+        ingresos = leer_json(RUTA_INGRESOS)  # Lee la lista de ingresos guardados en JSON.
+        gastos = leer_json(RUTA_GASTOS)  # Lee la lista de gastos guardados en JSON.
 
-        # Lee los gastos registrados.
-        gastos = leer_json(RUTA_GASTOS)
+        total_ingresos = calcular_total(ingresos)  # Calcula el total de ingresos.
+        total_gastos = calcular_total(gastos)  # Calcula el total de gastos.
+        utilidad = total_ingresos - total_gastos  # Calcula la utilidad actual.
 
-        # Calcula el total de ingresos.
-        total_ingresos = calcular_total(ingresos)
+        print("\n===== IA FINANCIERA FINFLOW =====")  # Muestra el título del asistente.
+        print("Usuario:", usuario_actual["usuario"])  # Muestra el usuario activo.
+        print("Rol:", rol)  # Muestra el rol del usuario.
+        print("--------------------------------")  # Separador visual.
 
-        # Calcula el total de gastos.
-        total_gastos = calcular_total(gastos)
+        print("1. ¿En qué gasté más?")  # Consulta la categoría con mayor gasto.
+        print("2. ¿Cuál fue mi ingreso más fuerte?")  # Consulta la categoría con mayor ingreso.
+        print("3. ¿Cuánto he ganado?")  # Muestra ingresos totales.
+        print("4. ¿Cuál es mi utilidad?")  # Muestra utilidad actual.
+        print("5. ¿Qué usuario registró más movimientos?")  # Analiza quién registró más movimientos.
+        print("6. ¿Estoy gastando más de lo que gano?")  # Compara ingresos contra gastos.
+        print("7. ¿Qué presupuesto está en más riesgo?")  # Revisa presupuestos en riesgo.
+        print("8. ¿Qué meta va mejor?")  # Revisa metas con mejor progreso.
+        print("9. Dame una recomendación personalizada")  # Genera recomendación financiera.
+        print("10. Dame un diagnóstico completo del negocio")  # Genera diagnóstico completo.
+        print("11. Ver enfoque de IA según mi rol")  # Muestra ayuda personalizada por rol.
+        print("0. Volver")  # Sale del menú de IA.
 
-        # Calcula la utilidad actual.
-        utilidad = total_ingresos - total_gastos
+        opcion = input("Seleccione una opción: ")  # Solicita la opción del usuario.
 
-        # Muestra el título del asistente financiero.
-        print("\n===== IA FINANCIERA SIMULADA =====")
+        if opcion == "1":  # Si el usuario quiere saber en qué gastó más.
+            resultado = obtener_categoria_mayor(gastos)  # Obtiene la categoría con mayor gasto.
 
-        # Opción para consultar la categoría con más gastos.
-        print("1. ¿En qué gasté más?")
+            if resultado is None:  # Verifica si no hay gastos registrados.
+                print("Todavía no hay gastos registrados.")  # Muestra mensaje si no hay datos.
+            else:  # Si sí hay gastos.
+                categoria, monto = resultado  # Separa categoría y monto.
+                print("La categoría donde más ha gastado es:", categoria)  # Muestra categoría.
+                print("Monto total: Q", monto)  # Muestra monto.
 
-        # Opción para consultar la categoría con mayor ingreso.
-        print("2. ¿Cuál fue mi ingreso más fuerte?")
+        elif opcion == "2":  # Si el usuario quiere saber su ingreso más fuerte.
+            resultado = obtener_categoria_mayor(ingresos)  # Obtiene la categoría con mayor ingreso.
 
-        # Opción para consultar ingresos totales.
-        print("3. ¿Cuánto he ganado?")
+            if resultado is None:  # Verifica si no hay ingresos registrados.
+                print("Todavía no hay ingresos registrados.")  # Muestra mensaje si no hay datos.
+            else:  # Si sí hay ingresos.
+                categoria, monto = resultado  # Separa categoría y monto.
+                print("La categoría de ingreso más fuerte es:", categoria)  # Muestra categoría.
+                print("Monto total: Q", monto)  # Muestra monto.
 
-        # Opción para consultar la utilidad actual.
-        print("4. ¿Cuál es mi utilidad?")
+        elif opcion == "3":  # Si el usuario quiere ver ingresos totales.
+            print("Sus ingresos totales son: Q", total_ingresos)  # Muestra ingresos.
 
-        # Opción para consultar qué usuario registró más movimientos.
-        print("5. ¿Qué usuario registró más movimientos?")
+        elif opcion == "4":  # Si el usuario quiere ver utilidad.
+            print("Su utilidad actual es: Q", utilidad)  # Muestra utilidad.
 
-        # Opción para comparar ingresos contra gastos.
-        print("6. ¿Estoy gastando más de lo que gano?")
+        elif opcion == "5":  # Si el usuario quiere saber quién registró más movimientos.
+            resultado = usuario_con_mas_movimientos()  # Calcula usuario con más movimientos.
 
-        # Opción para revisar el presupuesto con más riesgo.
-        print("7. ¿Qué presupuesto está en más riesgo?")
+            if resultado is None:  # Verifica si no hay movimientos.
+                print("Todavía no hay movimientos registrados.")  # Muestra mensaje sin datos.
+            else:  # Si hay movimientos.
+                usuario, cantidad = resultado  # Separa usuario y cantidad.
+                print("El usuario con más movimientos registrados es:", usuario)  # Muestra usuario.
+                print("Cantidad de movimientos:", cantidad)  # Muestra cantidad.
 
-        # Opción para revisar la meta con mejor progreso.
-        print("8. ¿Qué meta va mejor?")
+        elif opcion == "6":  # Si el usuario quiere comparar ingresos contra gastos.
+            if total_gastos > total_ingresos:  # Verifica si los gastos superan ingresos.
+                print("Sí. Actualmente los gastos son mayores que los ingresos.")  # Muestra alerta.
+                print("Diferencia negativa: Q", total_gastos - total_ingresos)  # Muestra diferencia.
+            elif total_gastos == total_ingresos:  # Verifica punto de equilibrio.
+                print("No exactamente. Está en punto de equilibrio.")  # Muestra equilibrio.
+            else:  # Si ingresos son mayores.
+                print("No. Los ingresos son mayores que los gastos.")  # Muestra estado positivo.
+                print("Diferencia positiva: Q", utilidad)  # Muestra utilidad.
 
-        # Opción para obtener una recomendación personalizada.
-        print("9. Dame una recomendación personalizada")
+        elif opcion == "7":  # Si el usuario quiere ver presupuesto en riesgo.
+            resultado = presupuesto_mas_riesgoso()  # Obtiene presupuesto más riesgoso.
 
-        # Opción para generar un diagnóstico completo del negocio.
-        print("10. Dame un diagnóstico completo del negocio")
+            if resultado is None:  # Verifica si no hay presupuestos.
+                print("No hay presupuestos registrados.")  # Muestra mensaje.
+            else:  # Si hay presupuesto.
+                presupuesto, porcentaje = resultado  # Separa presupuesto y porcentaje.
+                print("Presupuesto con más riesgo:", presupuesto["categoria"])  # Muestra categoría.
+                print("Mes:", presupuesto["mes"])  # Muestra mes.
+                print("Porcentaje utilizado:", round(porcentaje, 2), "%")  # Muestra avance.
 
-        # Opción para volver al menú anterior.
-        print("0. Volver")
+                if porcentaje > 100:  # Verifica si superó el presupuesto.
+                    print("Este presupuesto ya fue superado.")  # Muestra alerta fuerte.
+                elif porcentaje >= 80:  # Verifica si está cerca del límite.
+                    print("Este presupuesto está cerca de ser superado.")  # Muestra advertencia.
+                else:  # Si todavía está controlado.
+                    print("Este presupuesto todavía está bajo control.")  # Muestra estado normal.
 
-        # Solicita al usuario una opción del menú.
-        opcion = input("Seleccione una opción: ")
+        elif opcion == "8":  # Si el usuario quiere ver la meta con mejor progreso.
+            resultado = meta_con_mejor_progreso()  # Obtiene meta con mejor avance.
 
-        # Opción 1: analiza la categoría donde más se ha gastado.
-        if opcion == "1":
+            if resultado is None:  # Verifica si no hay metas.
+                print("No hay metas registradas.")  # Muestra mensaje.
+            else:  # Si hay metas.
+                meta, porcentaje = resultado  # Separa meta y porcentaje.
+                print("La meta con mejor progreso es:", meta["descripcion"])  # Muestra descripción.
+                print("Tipo:", meta["tipo"])  # Muestra tipo.
+                print("Progreso:", round(porcentaje, 2), "%")  # Muestra progreso.
 
-            # Obtiene la categoría de gasto con mayor monto.
-            resultado = obtener_categoria_mayor(gastos)
+        elif opcion == "9":  # Si el usuario quiere recomendación.
+            recomendacion_personalizada()  # Ejecuta recomendación simulada.
 
-            # Verifica si todavía no hay gastos registrados.
-            if resultado is None:
-                print("Todavía no hay gastos registrados.")
+        elif opcion == "10":  # Si el usuario quiere diagnóstico.
+            diagnostico_negocio()  # Ejecuta diagnóstico financiero completo.
 
-            # Si hay datos, muestra la categoría y el monto.
-            else:
-                categoria, monto = resultado
-                print("La categoría donde más ha gastado es:", categoria)
-                print("Monto total: Q", monto)
+        elif opcion == "11":  # Si el usuario quiere enfoque personalizado por rol.
+            mostrar_enfoque_ia_por_rol(usuario_actual)  # Muestra ayuda según el rol.
 
-        # Opción 2: analiza la categoría de ingreso más fuerte.
-        elif opcion == "2":
+        elif opcion == "0":  # Si el usuario quiere salir.
+            break  # Rompe el ciclo y vuelve al menú principal.
 
-            # Obtiene la categoría de ingreso con mayor monto.
-            resultado = obtener_categoria_mayor(ingresos)
+        else:  # Si el usuario escribe una opción inválida.
+            print("Opción inválida.")  # Muestra error.
 
-            # Verifica si todavía no hay ingresos registrados.
-            if resultado is None:
-                print("Todavía no hay ingresos registrados.")
 
-            # Si hay datos, muestra la categoría y el monto.
-            else:
-                categoria, monto = resultado
-                print("La categoría de ingreso más fuerte es:", categoria)
-                print("Monto total: Q", monto)
+def mostrar_enfoque_ia_por_rol(usuario_actual):  # Muestra cómo la IA ayuda según el rol.
+    rol = usuario_actual["rol"]  # Obtiene el rol del usuario actual.
 
-        # Opción 3: muestra los ingresos totales.
-        elif opcion == "3":
+    print("\n===== ENFOQUE DE IA PERSONALIZADO =====")  # Muestra título.
 
-            # Imprime el total de ingresos calculado.
-            print("Sus ingresos totales son: Q", total_ingresos)
+    if rol == "admin":  # Si el usuario es administrador.
+        print("Como administrador, la IA te ayuda a analizar todo el sistema.")  # Explica enfoque.
+        print("- Configuración de módulos.")  # Ayuda con módulos.
+        print("- Gestión de usuarios.")  # Ayuda con usuarios.
+        print("- Auditoría y control general.")  # Ayuda con auditoría.
+        print("- Reportes completos y visión estratégica.")  # Ayuda estratégica.
 
-        # Opción 4: muestra la utilidad actual.
-        elif opcion == "4":
+    elif rol == "gerente":  # Si el usuario es gerente.
+        print("Como gerente, la IA te ayuda a tomar decisiones financieras.")  # Explica enfoque.
+        print("- Dashboard ejecutivo.")  # Ayuda con dashboard.
+        print("- Flujo de caja.")  # Ayuda con flujo.
+        print("- Reportes e indicadores clave.")  # Ayuda con reportes.
+        print("- Recomendaciones para mejorar utilidad.")  # Ayuda con utilidad.
 
-            # Imprime la utilidad actual del negocio.
-            print("Su utilidad actual es: Q", utilidad)
+    elif rol == "contador":  # Si el usuario es contador.
+        print("Como contador, la IA te ayuda a revisar registros financieros.")  # Explica enfoque.
+        print("- Ingresos.")  # Ayuda con ingresos.
+        print("- Gastos.")  # Ayuda con gastos.
+        print("- Categorías contables.")  # Ayuda con categorías.
+        print("- Reportes financieros.")  # Ayuda con reportes.
 
-        # Opción 5: muestra qué usuario ha registrado más movimientos.
-        elif opcion == "5":
+    elif rol == "empleado":  # Si el usuario es empleado.
+        print("Como empleado, la IA te guía en tareas simples y operativas.")  # Explica enfoque.
+        print("- Explicación básica del dashboard.")  # Ayuda con dashboard.
+        print("- Ayuda para registrar ingresos o gastos.")  # Ayuda operativa.
+        print("- Uso correcto del menú reducido.")  # Ayuda con menú.
+        print("- Consejos simples para evitar errores.")  # Ayuda básica.
 
-            # Calcula el usuario con más movimientos registrados.
-            resultado = usuario_con_mas_movimientos()
-
-            # Verifica si no hay movimientos registrados.
-            if resultado is None:
-                print("Todavía no hay movimientos registrados.")
-
-            # Si hay datos, muestra el usuario y su cantidad de registros.
-            else:
-                usuario, cantidad = resultado
-                print("El usuario con más movimientos registrados es:", usuario)
-                print("Cantidad de movimientos:", cantidad)
-
-        # Opción 6: compara si los gastos son mayores, iguales o menores que los ingresos.
-        elif opcion == "6":
-
-            # Verifica si los gastos superan a los ingresos.
-            if total_gastos > total_ingresos:
-                print("Sí. Actualmente los gastos son mayores que los ingresos.")
-                print("Diferencia negativa: Q", total_gastos - total_ingresos)
-
-            # Verifica si la empresa está en punto de equilibrio.
-            elif total_gastos == total_ingresos:
-                print("No exactamente. Está en punto de equilibrio.")
-
-            # Si los ingresos son mayores, muestra la diferencia positiva.
-            else:
-                print("No. Los ingresos son mayores que los gastos.")
-                print("Diferencia positiva: Q", utilidad)
-
-        # Opción 7: muestra el presupuesto con mayor riesgo.
-        elif opcion == "7":
-
-            # Obtiene el presupuesto más riesgoso según porcentaje utilizado.
-            resultado = presupuesto_mas_riesgoso()
-
-            # Verifica si no hay presupuestos registrados.
-            if resultado is None:
-                print("No hay presupuestos registrados.")
-
-            # Si existe presupuesto, muestra información detallada.
-            else:
-                presupuesto, porcentaje = resultado
-                print("Presupuesto con más riesgo:", presupuesto["categoria"])
-                print("Mes:", presupuesto["mes"])
-                print("Porcentaje utilizado:", round(porcentaje, 2), "%")
-
-                # Indica si el presupuesto ya fue superado.
-                if porcentaje > 100:
-                    print("Este presupuesto ya fue superado.")
-
-                # Indica si el presupuesto está cerca del límite.
-                elif porcentaje >= 80:
-                    print("Este presupuesto está cerca de ser superado.")
-
-                # Indica que el presupuesto sigue bajo control.
-                else:
-                    print("Este presupuesto todavía está bajo control.")
-
-        # Opción 8: muestra la meta financiera con mejor progreso.
-        elif opcion == "8":
-
-            # Obtiene la meta con mejor porcentaje de avance.
-            resultado = meta_con_mejor_progreso()
-
-            # Verifica si no hay metas registradas.
-            if resultado is None:
-                print("No hay metas registradas.")
-
-            # Si existe una meta, muestra información detallada.
-            else:
-                meta, porcentaje = resultado
-                print("La meta con mejor progreso es:", meta["descripcion"])
-                print("Tipo:", meta["tipo"])
-                print("Progreso:", round(porcentaje, 2), "%")
-
-        # Opción 9: genera una recomendación personalizada.
-        elif opcion == "9":
-
-            # Ejecuta la función de recomendación inteligente.
-            recomendacion_personalizada()
-
-        # Opción 10: genera un diagnóstico financiero completo del negocio.
-        elif opcion == "10":
-
-            # Ejecuta la función de diagnóstico completo.
-            diagnostico_negocio()
-
-        # Opción 0: sale del asistente financiero.
-        elif opcion == "0":
-            break
-
-        # Muestra error cuando la opción no existe.
-        else:
-            print("Opción inválida.")
+    else:  # Si el rol no existe.
+        print("La IA te ayudará con funciones generales de FinFlow.")  # Mensaje general.
+    
