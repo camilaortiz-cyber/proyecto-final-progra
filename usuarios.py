@@ -99,6 +99,27 @@ def tiene_permiso(usuario, modulo):  # Verifica si un usuario tiene permiso para
             "metas",
             "alertas",
             "sesiones"
+            "reportes_mensuales",
+        ],
+
+                "administrador": [
+            "dashboard",
+            "ingresos",
+            "gastos",
+            "flujo_caja",
+            "reportes",
+            "reportes_mensuales",
+            "ia_financiera",
+            "usuarios",
+            "auditoria",
+            "configuracion",
+            "empresas",
+            "clientes",
+            "proveedores",
+            "presupuestos",
+            "metas",
+            "alertas",
+            "sesiones"
         ],
 
         "gerente": [  # El gerente ve información para tomar decisiones.
@@ -112,6 +133,7 @@ def tiene_permiso(usuario, modulo):  # Verifica si un usuario tiene permiso para
             "presupuestos",
             "metas",
             "alertas"
+            "reportes_mensuales",
         ],
 
         "contador": [  # El contador registra y revisa información financiera.
@@ -124,6 +146,7 @@ def tiene_permiso(usuario, modulo):  # Verifica si un usuario tiene permiso para
             "presupuestos",
             "metas",
             "alertas"
+            "reportes_mensuales",
         ],
 
         "empleado": [  # El empleado tiene acceso limitado y operativo.
@@ -131,6 +154,7 @@ def tiene_permiso(usuario, modulo):  # Verifica si un usuario tiene permiso para
             "ingresos",
             "gastos",
             "ia_financiera"
+            "reportes_mensuales",
         ]
     }
 

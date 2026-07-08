@@ -2,6 +2,8 @@
 # Importa funciones relacionadas con usuarios, inicio de sesión, permisos y administración.
 from usuarios import iniciar_sesion, mostrar_usuario, tiene_permiso, menu_administracion_usuarios
 
+from reportes_mensuales import menu_reportes_mensuales
+
 # Importa funciones para obtener, configurar y mostrar los módulos activos del sistema.
 from modulos import obtener_modulos, configurar_modulos, mostrar_modulos_activos
 
@@ -159,6 +161,9 @@ def mostrar_menu(usuario, id_sesion):
         if modulos["reportes"] and tiene_permiso(usuario, "reportes"):
             numero = agregar_opcion(opciones, numero, "Reportes", "reportes")
 
+        if tiene_permiso(usuario, "reportes_mensuales"):
+            numero = agregar_opcion(opciones, numero, "Reportes mensuales", "reportes_mensuales")
+
         # Agrega IA financiera si el módulo está activo y el usuario tiene permiso.
         if modulos["ia_financiera"] and tiene_permiso(usuario, "ia_financiera"):
             numero = agregar_opcion(opciones, numero, "IA financiera", "ia_financiera")
@@ -240,6 +245,9 @@ def mostrar_menu(usuario, id_sesion):
             # Abre el submenú de reportes.
             elif accion == "reportes":
                 mostrar_menu_reportes()
+
+            elif accion == "reportes_mensuales":
+                menu_reportes_mensuales(usuario)
 
             # Abre el asistente financiero.
             elif accion == "ia_financiera":

@@ -301,6 +301,8 @@
                     <span>Activo</span>
                 </article>
 
+                
+
                 <article class="module-card reveal" data-status="mvp" data-module-name="IA financiera">
                     <div class="module-icon">✦</div>
                     <h3>IA financiera</h3>
@@ -581,6 +583,11 @@
                 </label>
 
                 <label>
+                    <input type="checkbox" class="module-toggle" value="reportes_mensuales" checked>
+                    Reportes Mensuales
+                </label>
+
+                <label>
                     <input type="checkbox" class="module-toggle" value="ia">
                     IA financiera
                 </label>
@@ -723,6 +730,137 @@
                         </div>
                     </div>
                 </section>
+
+<section class="monthly-pro-section module-section dashboard-wide-section" data-module="reportes_mensuales" id="monthlyReportsSection">
+    <div class="monthly-pro-card">
+        <div class="monthly-pro-header">
+            <div>
+                <span class="monthly-pro-kicker">Inteligencia mensual</span>
+                <h3>Reportes Mensuales</h3>
+                <p>
+                    Resumen ejecutivo compacto con finanzas, operación, metas, alertas y análisis por rol.
+                </p>
+            </div>
+
+            <div class="monthly-pro-pill">
+                <span></span>
+                Rol activo
+            </div>
+        </div>
+
+        <div class="monthly-pro-main-grid">
+            <article class="monthly-pro-metric">
+                <span>Ingresos</span>
+                <strong id="execIncome">Q0</strong>
+                <small>Capital generado</small>
+            </article>
+
+            <article class="monthly-pro-metric">
+                <span>Gastos</span>
+                <strong id="execExpenses">Q0</strong>
+                <small>Salida operativa</small>
+            </article>
+
+            <article class="monthly-pro-metric featured">
+                <span>Utilidad</span>
+                <strong id="execProfit">Q0</strong>
+                <small>Resultado neto</small>
+            </article>
+
+            <article class="monthly-pro-metric">
+                <span>Transacciones</span>
+                <strong id="execMovements">0</strong>
+                <small>Movimientos</small>
+            </article>
+        </div>
+
+        <div class="monthly-pro-secondary-grid">
+            <article>
+                <span>Promedio</span>
+                <strong id="execAverage">Q0</strong>
+            </article>
+
+            <article>
+                <span>Clientes</span>
+                <strong id="execClients">0</strong>
+            </article>
+
+            <article>
+                <span>Proveedores</span>
+                <strong id="execSuppliers">0</strong>
+            </article>
+
+            <article>
+                <span>Presupuestos</span>
+                <strong id="execBudgets">0</strong>
+            </article>
+
+            <article>
+                <span>Alertas</span>
+                <strong id="execAlerts">0</strong>
+            </article>
+
+            <article>
+                <span>Metas</span>
+                <strong id="execGoals">0/0</strong>
+            </article>
+
+            <article>
+                <span>Margen</span>
+                <strong id="execMargin">0%</strong>
+            </article>
+        </div>
+
+        <div class="monthly-pro-charts">
+            <div class="monthly-pro-chart-card wide">
+                <div class="monthly-pro-chart-header">
+                    <div>
+                        <span class="monthly-pro-kicker">Tendencia</span>
+                        <h4>Movimiento financiero</h4>
+                    </div>
+                </div>
+                <canvas id="execTrendChart"></canvas>
+            </div>
+
+            <div class="monthly-pro-chart-card">
+                <div class="monthly-pro-chart-header">
+                    <div>
+                        <span class="monthly-pro-kicker">Distribución</span>
+                        <h4>Ingresos vs gastos</h4>
+                    </div>
+                </div>
+                <canvas id="execMixChart"></canvas>
+            </div>
+
+            <div class="monthly-pro-chart-card">
+                <div class="monthly-pro-chart-header">
+                    <div>
+                        <span class="monthly-pro-kicker">Operación</span>
+                        <h4>Actividad empresarial</h4>
+                    </div>
+                </div>
+                <canvas id="execOpsChart"></canvas>
+            </div>
+        </div>
+
+        <div class="monthly-pro-bottom">
+            <div class="monthly-pro-role-box">
+                <span class="monthly-pro-kicker">Resumen por permisos</span>
+                <h4 id="execRoleTitle">Resumen mensual</h4>
+                <div id="execRoleContent">
+                    <p>El resumen se mostrará según el rol del usuario activo.</p>
+                </div>
+            </div>
+
+            <div class="monthly-pro-ai">
+                <span>FinFlow Assistant</span>
+                <p id="execInsight">
+                    Analizando comportamiento mensual...
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
 
                <section class="module-section" data-module="clientes">
     <article class="business-module-card">
@@ -958,6 +1096,7 @@
         <p>Diseñado como plataforma financiera modular para PYMES.</p>
     </footer>
 
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="script.js"></script>
 </body>
 </html>

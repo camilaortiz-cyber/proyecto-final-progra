@@ -565,25 +565,25 @@ const experienceUsers = {
         password: "1234", // Contraseña demo del administrador.
         roleName: "Administrador", // Nombre visual del rol.
         description: "Gestiona la empresa, módulos, usuarios, reportes y configuración general.", // Descripción elegante del rol.
-        modules: ["ingresos", "gastos", "reportes", "ia", "clientes", "proveedores", "presupuestos", "metas", "alertas", "neon"] // Módulos visibles para admin.
+        modules: ["ingresos", "gastos", "reportes", "reportes_mensuales", "ia", "clientes", "proveedores", "presupuestos", "metas", "alertas", "neon"] // Módulos visibles para admin.
     },
     gerente: {
         password: "1234", // Contraseña demo del gerente.
         roleName: "Gerente", // Nombre visual del rol.
         description: "Consulta indicadores, flujo financiero, reportes y alertas para tomar decisiones.", // Descripción del rol.
-        modules: ["reportes", "ia", "metas", "alertas", "neon"] // Módulos visibles para gerente.
+        modules: ["reportes", "reportes_mensuales", "ia", "metas", "alertas", "neon"] // Módulos visibles para gerente.
     },
     contador: {
         password: "1234", // Contraseña demo del contador.
         roleName: "Contador", // Nombre visual del rol.
         description: "Registra, revisa y analiza ingresos, gastos, presupuestos y reportes financieros.", // Descripción del rol.
-        modules: ["ingresos", "gastos", "reportes", "ia", "presupuestos", "metas"] // Módulos visibles para contador.
+        modules: ["ingresos", "gastos", "reportes", "reportes_mensuales", "ia", "presupuestos", "metas"] // Módulos visibles para contador.
     },
     empleado: {
         password: "1234", // Contraseña demo del empleado.
         roleName: "Empleado", // Nombre visual del rol.
         description: "Registra ventas, ingresos diarios y gastos operativos de caja chica.", // Descripción sin decir acceso limitado.
-        modules: ["ingresos", "gastos", "ia"] // Módulos visibles para empleado.
+        modules: ["ingresos", "gastos", "reportes_mensuales", "ia"] // Módulos visibles para empleado.
     }
 };
 
@@ -742,7 +742,7 @@ for (let i = 0; i < moduleToggles.length; i++) {
         roleAiResponse.textContent = roleAiMessages[username]; // Muestra el mensaje del rol.
     }
 
-    customizeFormsByRole(username); // Personaliza formularios y asistente según el rol.
+        customizeFormsByRole(username);
 
     localStorage.setItem("finflowExperienceUser", username); // Guarda la sesión en el navegador.
 
@@ -960,6 +960,10 @@ function refreshBusinessBrain() {
     renderBudgets();
     renderGoals();
     renderAlerts();
+
+    if (typeof renderExecutiveMonthlyReport === "function") {
+        renderExecutiveMonthlyReport();
+    }
 }
 
 function addDemoMovement(type, description, category, amount) {
@@ -1488,6 +1492,7 @@ if (clientForm) {
         finflowClients.push(newClient);
         saveClients();
         renderClients();
+        renderExecutiveMonthlyReport();
         clientForm.reset();
     });
 }
@@ -1511,6 +1516,7 @@ if (supplierForm) {
         saveSuppliers();
         renderSuppliers();
         renderAlerts();
+        renderExecutiveMonthlyReport();
         supplierForm.reset();
     });
 }
@@ -1534,6 +1540,7 @@ if (budgetForm) {
         saveBudgets();
         renderBudgets();
         renderAlerts();
+        renderExecutiveMonthlyReport();
         budgetForm.reset();
 
         if (budgetMonth) {
@@ -1561,6 +1568,7 @@ if (goalForm) {
         saveGoals();
         renderGoals();
         renderAlerts();
+        renderExecutiveMonthlyReport();
         goalForm.reset();
 
         if (goalMonth) {
@@ -1622,6 +1630,7 @@ document.addEventListener("click", function (event) {
             finflowClients[clientIndex].status = actionButton.dataset.clientStatus;
             saveClients();
             renderClients();
+            renderExecutiveMonthlyReport();
         }
 
         if (actionButton.classList.contains("client-delete-button")) {
@@ -1630,6 +1639,7 @@ document.addEventListener("click", function (event) {
             finflowClients.splice(clientIndex, 1);
             saveClients();
             renderClients();
+            renderExecutiveMonthlyReport();
         }
 
         if (actionButton.classList.contains("supplier-status-button")) {
@@ -1638,6 +1648,7 @@ document.addEventListener("click", function (event) {
             saveSuppliers();
             renderSuppliers();
             renderAlerts();
+            renderExecutiveMonthlyReport();
         }
 
         if (actionButton.classList.contains("supplier-delete-button")) {
@@ -1647,6 +1658,7 @@ document.addEventListener("click", function (event) {
             saveSuppliers();
             renderSuppliers();
             renderAlerts();
+            renderExecutiveMonthlyReport();
         }
 
         if (actionButton.classList.contains("budget-delete-button")) {
@@ -1656,6 +1668,7 @@ document.addEventListener("click", function (event) {
             saveBudgets();
             renderBudgets();
             renderAlerts();
+            renderExecutiveMonthlyReport();
         }
 
         if (actionButton.classList.contains("goal-delete-button")) {
@@ -1665,6 +1678,7 @@ document.addEventListener("click", function (event) {
             saveGoals();
             renderGoals();
             renderAlerts();
+            renderExecutiveMonthlyReport();
         }
 
         const openMenus = document.querySelectorAll(".action-menu-wrapper.is-open");
@@ -1691,4 +1705,420 @@ if (goalMonth) {
     goalMonth.value = getCurrentBusinessMonth();
 }
 
-refreshBusinessBrain(); 
+// ===== REPORTE MENSUAL EJECUTIVO COMPACTO =====
+
+let execTrendChart = null;
+let execMixChart = null;
+let execOpsChart = null;
+
+function getExecUser() {
+    const savedUser = localStorage.getItem("finflowExperienceUser");
+
+    if (savedUser && experienceUsers[savedUser]) {
+        return {
+            username: savedUser,
+            role: savedUser,
+            roleName: experienceUsers[savedUser].roleName
+        };
+    }
+
+    return {
+        username: "admin",
+        role: "admin",
+        roleName: "Administrador"
+    };
+}
+
+function getExecMovementAmount(movement) {
+    if (movement.amount !== undefined) {
+        return Number(movement.amount);
+    }
+
+    if (movement.monto !== undefined) {
+        return Number(movement.monto);
+    }
+
+    return 0;
+}
+
+function isExecIncome(movement) {
+    return movement.type === "income" || movement.tipo === "ingreso";
+}
+
+function isExecExpense(movement) {
+    return movement.type === "expense" || movement.tipo === "gasto";
+}
+
+function getExecMonthlyMovements() {
+    if (Array.isArray(demoMovements)) {
+        return demoMovements;
+    }
+
+    return [];
+}
+
+function getExecData() {
+    const movements = getExecMonthlyMovements();
+
+    let alerts = [];
+
+    if (typeof buildAutomaticAlerts === "function") {
+        alerts = buildAutomaticAlerts();
+    }
+
+    let income = 0;
+    let expense = 0;
+    let incomeTransactions = 0;
+    let expenseTransactions = 0;
+    let totalTransactionAmount = 0;
+    let biggestTransaction = null;
+
+    for (let i = 0; i < movements.length; i++) {
+        const movement = movements[i];
+        const amount = Number(movement.amount || movement.monto || 0);
+
+        totalTransactionAmount = totalTransactionAmount + amount;
+
+        if (movement.type === "income" || movement.tipo === "ingreso") {
+            income = income + amount;
+            incomeTransactions = incomeTransactions + 1;
+        }
+
+        if (movement.type === "expense" || movement.tipo === "gasto") {
+            expense = expense + amount;
+            expenseTransactions = expenseTransactions + 1;
+        }
+
+        if (!biggestTransaction || amount > Number(biggestTransaction.amount || biggestTransaction.monto || 0)) {
+            biggestTransaction = movement;
+        }
+    }
+
+    const profit = income - expense;
+    const movementCount = movements.length;
+    const average = movementCount > 0 ? totalTransactionAmount / movementCount : 0;
+    const margin = income > 0 ? (profit / income) * 100 : 0;
+
+    let completedGoals = 0;
+    let totalGoalProgress = 0;
+
+    for (let i = 0; i < finflowGoals.length; i++) {
+        let progress = 0;
+
+        if (typeof calculateGoalProgress === "function") {
+            progress = calculateGoalProgress(finflowGoals[i]).percentage;
+        }
+
+        const safeProgress = Math.min(Math.max(progress, 0), 100);
+
+        totalGoalProgress = totalGoalProgress + safeProgress;
+
+        if (safeProgress >= 100) {
+            completedGoals = completedGoals + 1;
+        }
+    }
+
+    const averageGoalProgress = finflowGoals.length > 0 ? totalGoalProgress / finflowGoals.length : 0;
+
+    return {
+        movements: movements,
+        income: income,
+        expense: expense,
+        profit: profit,
+        movementCount: movementCount,
+        incomeTransactions: incomeTransactions,
+        expenseTransactions: expenseTransactions,
+        average: average,
+        margin: margin,
+        clients: finflowClients.length,
+        suppliers: finflowSuppliers.length,
+        budgets: finflowBudgets.length,
+        alerts: alerts.length,
+        goals: finflowGoals.length,
+        completedGoals: completedGoals,
+        averageGoalProgress: averageGoalProgress,
+        biggestTransaction: biggestTransaction
+    };
+}
+function setExecText(id, value) {
+    const element = document.getElementById(id);
+
+    if (element) {
+        element.textContent = value;
+    }
+}
+
+function renderExecutiveMonthlyReport() {
+    const user = getExecUser();
+    const data = getExecData();
+
+    setExecText("execIncome", formatCurrency(data.income));
+    setExecText("execExpenses", formatCurrency(data.expense));
+    setExecText("execProfit", formatCurrency(data.profit));
+    setExecText("execMovements", data.movementCount);
+    setExecText("execAverage", formatCurrency(data.average));
+    setExecText("execClients", data.clients);
+    setExecText("execSuppliers", data.suppliers);
+    setExecText("execBudgets", data.budgets);
+    setExecText("execAlerts", data.alerts);
+    setExecText("execGoals", data.completedGoals + "/" + data.goals);
+    setExecText("execMargin", Math.round(data.margin) + "%");
+
+    renderExecRoleSummary(user, data);
+    renderExecInsight(data);
+    renderExecCharts(data);
+}
+
+function renderExecRoleSummary(user, data) {
+    const title = document.getElementById("execRoleTitle");
+    const content = document.getElementById("execRoleContent");
+
+    if (!title || !content) {
+        return;
+    }
+
+    if (user.role === "admin") {
+        title.textContent = "Resumen ejecutivo para administrador";
+        content.innerHTML =
+            "<ul>" +
+                "<li>Utilidad mensual: " + formatCurrency(data.profit) + " con margen de " + Math.round(data.margin) + "%.</li>" +
+                "<li>Transacciones: " + data.movementCount + " (" + data.incomeTransactions + " ingresos y " + data.expenseTransactions + " gastos).</li>" +
+                "<li>Promedio por transacción: " + formatCurrency(data.average) + ".</li>" +
+                "<li>Clientes: " + data.clients + ". Proveedores: " + data.suppliers + ".</li>" +
+                "<li>Alertas activas: " + data.alerts + ". Metas cumplidas: " + data.completedGoals + " de " + data.goals + ".</li>" +
+            "</ul>";
+    } else if (user.role === "gerente") {
+        title.textContent = "Resumen operativo para gerente";
+        content.innerHTML =
+            "<ul>" +
+                "<li>Resultado mensual: " + formatCurrency(data.profit) + ".</li>" +
+                "<li>Actividad del equipo: " + data.movementCount + " movimientos.</li>" +
+                "<li>Relación comercial: " + data.clients + " clientes y " + data.suppliers + " proveedores.</li>" +
+                "<li>Progreso promedio de metas: " + Math.round(data.averageGoalProgress) + "%.</li>" +
+                "<li>Alertas que requieren seguimiento: " + data.alerts + ".</li>" +
+            "</ul>";
+    } else if (user.role === "contador") {
+        title.textContent = "Resumen financiero para contador";
+        content.innerHTML =
+            "<ul>" +
+                "<li>Ingresos contables: " + formatCurrency(data.income) + ".</li>" +
+                "<li>Gastos contables: " + formatCurrency(data.expense) + ".</li>" +
+                "<li>Flujo neto: " + formatCurrency(data.profit) + ".</li>" +
+                "<li>Promedio por movimiento: " + formatCurrency(data.average) + ".</li>" +
+                "<li>Transacciones revisables: " + data.movementCount + ".</li>" +
+            "</ul>";
+    } else if (user.role === "empleado") {
+        title.textContent = "Resumen personal para empleado";
+        content.innerHTML =
+            "<ul>" +
+                "<li>Movimientos registrados este mes: " + data.movementCount + ".</li>" +
+                "<li>Ingresos registrados: " + data.incomeTransactions + ".</li>" +
+                "<li>Gastos registrados: " + data.expenseTransactions + ".</li>" +
+                "<li>Vista enfocada en actividad operativa y registros diarios.</li>" +
+            "</ul>";
+    }
+}
+
+function renderExecInsight(data) {
+    const element = document.getElementById("execInsight");
+
+    if (!element) {
+        return;
+    }
+
+    if (data.movementCount === 0) {
+        element.textContent = "Todavía no hay suficientes movimientos para generar un análisis ejecutivo. Registra ingresos y gastos para activar el diagnóstico mensual.";
+        return;
+    }
+
+    if (data.profit < 0) {
+        element.textContent = "El mes presenta pérdida operativa. Se recomienda revisar gastos altos, presupuestos y proveedores pendientes.";
+        return;
+    }
+
+    if (data.alerts > 0 && data.averageGoalProgress < 50) {
+        element.textContent = "Hay alertas activas y las metas avanzan lento. El foco debe estar en reducir riesgos y acelerar acciones comerciales.";
+        return;
+    }
+
+    if (data.margin >= 40 && data.alerts === 0) {
+        element.textContent = "El desempeño mensual es fuerte: margen saludable, operación estable y sin alertas activas.";
+        return;
+    }
+
+    element.textContent = "El mes se mantiene estable. Conviene monitorear margen, metas, presupuestos y comportamiento de proveedores.";
+}
+
+function destroyExecCharts() {
+    if (execTrendChart) {
+        execTrendChart.destroy();
+        execTrendChart = null;
+    }
+
+    if (execMixChart) {
+        execMixChart.destroy();
+        execMixChart = null;
+    }
+
+    if (execOpsChart) {
+        execOpsChart.destroy();
+        execOpsChart = null;
+    }
+}
+
+function renderExecCharts(data) {
+    if (typeof Chart === "undefined") {
+        return;
+    }
+
+    const trendCanvas = document.getElementById("execTrendChart");
+    const mixCanvas = document.getElementById("execMixChart");
+    const opsCanvas = document.getElementById("execOpsChart");
+
+    if (!trendCanvas || !mixCanvas || !opsCanvas) {
+        return;
+    }
+
+    destroyExecCharts();
+
+    const chartText = "#ffffff";
+    const mutedText = "rgba(255, 255, 255, 0.58)";
+    const gold = "#d4af37";
+    const softGold = "#fff2b0";
+    const darkGold = "#7c5a18";
+
+    const trendLabels = [];
+    const trendValues = [];
+
+    for (let i = 0; i < data.movements.length; i++) {
+        trendLabels.push("Mov " + (i + 1));
+        trendValues.push(getExecMovementAmount(data.movements[i]));
+    }
+
+    if (trendLabels.length === 0) {
+        trendLabels.push("Sin datos");
+        trendValues.push(0);
+    }
+
+    execTrendChart = new Chart(trendCanvas, {
+        type: "line",
+        data: {
+            labels: trendLabels,
+            datasets: [
+                {
+                    label: "Monto",
+                    data: trendValues,
+                    borderColor: gold,
+                    backgroundColor: "rgba(212, 175, 55, 0.18)",
+                    tension: 0.38,
+                    fill: true,
+                    pointRadius: 3,
+                    pointBackgroundColor: softGold
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: false
+                }
+            },
+            scales: {
+                x: {
+                    ticks: { color: mutedText },
+                    grid: { color: "rgba(255,255,255,0.05)" }
+                },
+                y: {
+                    ticks: { color: mutedText },
+                    grid: { color: "rgba(255,255,255,0.06)" }
+                }
+            }
+        }
+    });
+
+    execMixChart = new Chart(mixCanvas, {
+        type: "doughnut",
+        data: {
+            labels: ["Ingresos", "Gastos"],
+            datasets: [
+                {
+                    data: [data.income, data.expense],
+                    backgroundColor: [gold, darkGold],
+                    borderColor: "rgba(255,255,255,0.08)",
+                    borderWidth: 2
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    labels: {
+                        color: chartText
+                    }
+                }
+            }
+        }
+    });
+
+    execOpsChart = new Chart(opsCanvas, {
+        type: "bar",
+        data: {
+            labels: ["Clientes", "Proveedores", "Presup.", "Metas", "Alertas"],
+            datasets: [
+                {
+                    label: "Cantidad",
+                    data: [data.clients, data.suppliers, data.budgets, data.goals, data.alerts],
+                    backgroundColor: [
+                        "rgba(212, 175, 55, 0.85)",
+                        "rgba(255, 242, 176, 0.75)",
+                        "rgba(212, 175, 55, 0.55)",
+                        "rgba(255, 255, 255, 0.62)",
+                        "rgba(124, 90, 24, 0.85)"
+                    ],
+                    borderRadius: 10
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: false
+                }
+            },
+            scales: {
+                x: {
+                    ticks: { color: mutedText },
+                    grid: { display: false }
+                },
+                y: {
+                    ticks: { color: mutedText, precision: 0 },
+                    grid: { color: "rgba(255,255,255,0.06)" }
+                }
+            }
+        }
+    });
+}
+
+document.addEventListener("click", function () {
+    setTimeout(renderExecutiveMonthlyReport, 60);
+});
+
+document.addEventListener("submit", function () {
+    setTimeout(renderExecutiveMonthlyReport, 60);
+});
+
+window.addEventListener("load", function () {
+    setTimeout(renderExecutiveMonthlyReport, 120);
+});
+
+setTimeout(function () {
+    refreshBusinessBrain();
+    renderModules();
+    renderExecutiveMonthlyReport();
+}, 150);
