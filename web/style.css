@@ -3108,3 +3108,281 @@ body.finflow-session-active .preloader {
     bottom: auto !important;
     right: 0 !important;
 } 
+
+.dashboard-wide-section {
+    grid-column: 1 / -1;
+    width: 100%;
+}
+
+.monthly-pro-section {
+    width: 100%;
+    position: relative;
+    z-index: 1;
+}
+
+.monthly-pro-card {
+    position: relative;
+    overflow: hidden;
+    padding: 30px;
+    border-radius: 34px;
+    background:
+        radial-gradient(circle at 14% 12%, rgba(212, 175, 55, 0.20), transparent 28%),
+        radial-gradient(circle at 88% 6%, rgba(255, 255, 255, 0.11), transparent 26%),
+        linear-gradient(135deg, #0b0b0b 0%, #19150d 48%, #050505 100%);
+    color: #ffffff;
+    border: 1px solid rgba(212, 175, 55, 0.18);
+    box-shadow:
+        0 26px 70px rgba(0, 0, 0, 0.22),
+        inset 0 1px 0 rgba(255, 255, 255, 0.08);
+    margin-bottom: 28px;
+}
+
+.monthly-pro-header {
+    display: flex;
+    justify-content: space-between;
+    gap: 22px;
+    margin-bottom: 22px;
+}
+
+.monthly-pro-kicker {
+    display: inline-block;
+    margin-bottom: 8px;
+    color: #d4af37;
+    font-size: 0.68rem;
+    font-weight: 900;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+}
+
+.monthly-pro-header h3 {
+    margin: 0 0 8px;
+    font-size: clamp(2rem, 4vw, 3.1rem);
+    letter-spacing: -0.07em;
+}
+
+.monthly-pro-header p {
+    max-width: 700px;
+    margin: 0;
+    color: rgba(255, 255, 255, 0.72);
+    line-height: 1.5;
+    font-size: 0.95rem;
+}
+
+.monthly-pro-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    height: fit-content;
+    padding: 9px 14px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.08);
+    color: #ffffff;
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    font-size: 0.78rem;
+    font-weight: 850;
+    white-space: nowrap;
+}
+
+.monthly-pro-pill span {
+    width: 8px;
+    height: 8px;
+    border-radius: 999px;
+    background: #d4af37;
+    box-shadow: 0 0 16px rgba(212, 175, 55, 0.9);
+}
+
+.monthly-pro-main-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 14px;
+    margin-bottom: 12px;
+}
+
+.monthly-pro-metric {
+    min-height: 112px;
+    padding: 18px;
+    border-radius: 24px;
+    background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.105), rgba(255, 255, 255, 0.045));
+    border: 1px solid rgba(255, 255, 255, 0.13);
+}
+
+.monthly-pro-metric.featured {
+    background:
+        linear-gradient(180deg, rgba(212, 175, 55, 0.25), rgba(255, 255, 255, 0.055));
+    border-color: rgba(212, 175, 55, 0.34);
+}
+
+.monthly-pro-metric span,
+.monthly-pro-secondary-grid span {
+    display: block;
+    margin-bottom: 10px;
+    color: rgba(255, 255, 255, 0.68);
+    font-size: 0.78rem;
+}
+
+.monthly-pro-metric strong {
+    display: block;
+    margin-bottom: 8px;
+    color: #ffffff;
+    font-size: clamp(1.35rem, 2.7vw, 2rem);
+    letter-spacing: -0.05em;
+}
+
+.monthly-pro-metric small {
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 0.72rem;
+}
+
+.monthly-pro-secondary-grid {
+    display: grid;
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+    gap: 10px;
+    margin-bottom: 14px;
+}
+
+.monthly-pro-secondary-grid article {
+    padding: 14px;
+    border-radius: 18px;
+    background: rgba(255, 255, 255, 0.065);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.monthly-pro-secondary-grid strong {
+    color: #d4af37;
+    font-size: 1.05rem;
+    letter-spacing: -0.04em;
+}
+
+.monthly-pro-charts {
+    display: grid;
+    grid-template-columns: 1.4fr 0.8fr 0.8fr;
+    gap: 14px;
+    margin-bottom: 14px;
+}
+
+.monthly-pro-chart-card {
+    min-height: 250px;
+    padding: 18px;
+    border-radius: 24px;
+    background: rgba(255, 255, 255, 0.085);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.monthly-pro-chart-header {
+    margin-bottom: 12px;
+}
+
+.monthly-pro-chart-header h4 {
+    margin: 0;
+    color: #ffffff;
+    font-size: 1rem;
+}
+
+.monthly-pro-chart-card canvas {
+    width: 100% !important;
+    max-height: 180px !important;
+}
+
+.monthly-pro-bottom {
+    display: grid;
+    grid-template-columns: 1.55fr 0.9fr;
+    gap: 14px;
+}
+
+.monthly-pro-role-box {
+    padding: 22px;
+    border-radius: 24px;
+    background: rgba(255, 255, 255, 0.085);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.monthly-pro-role-box h4 {
+    margin: 0 0 14px;
+    color: #ffffff;
+    font-size: 1.1rem;
+}
+
+.monthly-pro-role-box ul {
+    padding: 0;
+    margin: 0;
+    list-style: none;
+}
+
+.monthly-pro-role-box li {
+    position: relative;
+    padding: 10px 0 10px 24px;
+    color: rgba(255, 255, 255, 0.82);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    line-height: 1.4;
+    font-size: 0.92rem;
+}
+
+.monthly-pro-role-box li::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 16px;
+    width: 8px;
+    height: 8px;
+    border-radius: 999px;
+    background: #d4af37;
+    box-shadow: 0 0 14px rgba(212, 175, 55, 0.8);
+}
+
+.monthly-pro-ai {
+    padding: 22px;
+    border-radius: 24px;
+    background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.97), rgba(245, 241, 232, 0.92));
+    color: #151515;
+}
+
+.monthly-pro-ai span {
+    display: inline-block;
+    margin-bottom: 12px;
+    color: #9b7625;
+    font-size: 0.72rem;
+    font-weight: 900;
+    letter-spacing: 0.13em;
+    text-transform: uppercase;
+}
+
+.monthly-pro-ai p {
+    margin: 0;
+    color: #252525;
+    line-height: 1.55;
+    font-weight: 700;
+    font-size: 0.95rem;
+}
+
+@media (max-width: 1200px) {
+    .monthly-pro-main-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .monthly-pro-secondary-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    .monthly-pro-charts,
+    .monthly-pro-bottom {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 640px) {
+    .monthly-pro-card {
+        padding: 22px;
+        border-radius: 28px;
+    }
+
+    .monthly-pro-header {
+        flex-direction: column;
+    }
+
+    .monthly-pro-main-grid,
+    .monthly-pro-secondary-grid {
+        grid-template-columns: 1fr;
+    }
+}
