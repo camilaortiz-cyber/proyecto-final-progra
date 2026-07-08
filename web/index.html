@@ -564,6 +564,7 @@
                 <button type="button" id="logoutExperienceButton">Cerrar sesión</button>
             </div>
 
+           
             <div class="module-switches">
                 <h3>Módulos activos</h3>
 
@@ -646,10 +647,81 @@
                         <h3>Dashboard</h3>
                     </div>
 
+<div class="dashboard-corner-actions">
+    <button type="button" class="company-settings-trigger" id="companySettingsTrigger" hidden>
+        Configuración empresa
+    </button>
+
                     <div class="active-module-pill" id="activeModulePill">
                         0 módulos activos
                     </div>
                 </div>
+                </div>
+
+<aside class="company-settings-panel" id="companySettingsPanel" hidden>
+    <div class="company-settings-glow"></div>
+
+    <div class="company-settings-header">
+        <div>
+            <span>Panel de administrador</span>
+            <h4>Configuración empresa</h4>
+        </div>
+
+        <button type="button" id="closeCompanySettingsButton">×</button>
+    </div>
+
+    <p class="company-settings-description">
+        Personaliza la identidad visual del dashboard para toda la compañía.
+    </p>
+
+    <form class="company-settings-form" id="companySettingsForm">
+        <label>
+            Moneda de uso
+            <select id="companyCurrencySelect">
+                <option value="Q">Quetzales — Q</option>
+                <option value="$">Dólares — $</option>
+                <option value="€">Euros — €</option>
+                <option value="₡">Colones — ₡</option>
+                <option value="MX$">Pesos mexicanos — MX$</option>
+            </select>
+        </label>
+
+        <label>
+            Color del fondo
+            <input type="color" id="companyBackgroundColor" value="#fbf8f1">
+        </label>
+
+        <label>
+            Color de las gráficas
+            <input type="color" id="companyChartColor" value="#d8bd76">
+        </label>
+
+        <label>
+            Color de los cuadros
+            <input type="color" id="companyCardColor" value="#ffffff">
+        </label>
+    </form>
+
+    <div class="company-chart-variants">
+        <span>Variaciones automáticas para gráficas</span>
+
+        <div>
+            <i id="chartVariantOne"></i>
+            <i id="chartVariantTwo"></i>
+            <i id="chartVariantThree"></i>
+        </div>
+    </div>
+
+    <div class="company-settings-actions">
+        <button type="button" id="resetCompanySettingsButton">
+            Restaurar FinFlow
+        </button>
+
+        <small id="companySettingsStatus">
+            Cambios guardados automáticamente.
+        </small>
+    </div>
+</aside>
 
                 <div class="app-metrics-grid">
                     <article>
@@ -730,138 +802,144 @@
                         </div>
                     </div>
                 </section>
+<section class="monthly-reports-section module-section" data-module="reportes_mensuales" id="monthlyReportsSection">
+    <div class="monthly-report-card">
+        <div class="monthly-report-orb"></div>
 
-<section class="monthly-pro-section module-section dashboard-wide-section" data-module="reportes_mensuales" id="monthlyReportsSection">
-    <div class="monthly-pro-card">
-        <div class="monthly-pro-header">
+        <div class="monthly-report-header">
             <div>
-                <span class="monthly-pro-kicker">Inteligencia mensual</span>
+                <span class="monthly-kicker">Inteligencia mensual</span>
                 <h3>Reportes Mensuales</h3>
                 <p>
-                    Resumen ejecutivo compacto con finanzas, operación, metas, alertas y análisis por rol.
+                    Panel ejecutivo con rentabilidad, liquidez, operación, clientes, proveedores,
+                    metas, alertas y proyección financiera.
                 </p>
             </div>
 
-            <div class="monthly-pro-pill">
+            <div class="monthly-role-pill">
                 <span></span>
-                Rol activo
+                <strong id="monthlyRoleName">Rol activo</strong>
             </div>
         </div>
 
-        <div class="monthly-pro-main-grid">
-            <article class="monthly-pro-metric">
+        <div class="monthly-report-grid executive-grid">
+            <div class="monthly-mini-card">
                 <span>Ingresos</span>
-                <strong id="execIncome">Q0</strong>
+                <strong id="monthlyIncome">Q 0</strong>
                 <small>Capital generado</small>
-            </article>
+            </div>
 
-            <article class="monthly-pro-metric">
+            <div class="monthly-mini-card">
                 <span>Gastos</span>
-                <strong id="execExpenses">Q0</strong>
+                <strong id="monthlyExpenses">Q 0</strong>
                 <small>Salida operativa</small>
-            </article>
+            </div>
 
-            <article class="monthly-pro-metric featured">
+            <div class="monthly-mini-card featured">
                 <span>Utilidad</span>
-                <strong id="execProfit">Q0</strong>
+                <strong id="monthlyProfit">Q 0</strong>
                 <small>Resultado neto</small>
-            </article>
+            </div>
 
-            <article class="monthly-pro-metric">
-                <span>Transacciones</span>
-                <strong id="execMovements">0</strong>
-                <small>Movimientos</small>
-            </article>
+            <div class="monthly-mini-card">
+                <span>Margen</span>
+                <strong id="monthlyMargin">0%</strong>
+                <small>Rentabilidad mensual</small>
+            </div>
         </div>
 
-        <div class="monthly-pro-secondary-grid">
+        <div class="monthly-kpi-grid">
             <article>
-                <span>Promedio</span>
-                <strong id="execAverage">Q0</strong>
+                <span>Movimientos</span>
+                <strong id="monthlyMovements">0</strong>
+            </article>
+
+            <article>
+                <span>Ticket promedio</span>
+                <strong id="monthlyAverage">Q 0</strong>
             </article>
 
             <article>
                 <span>Clientes</span>
-                <strong id="execClients">0</strong>
+                <strong id="monthlyClients">0</strong>
             </article>
 
             <article>
                 <span>Proveedores</span>
-                <strong id="execSuppliers">0</strong>
+                <strong id="monthlySuppliers">0</strong>
             </article>
 
             <article>
                 <span>Presupuestos</span>
-                <strong id="execBudgets">0</strong>
-            </article>
-
-            <article>
-                <span>Alertas</span>
-                <strong id="execAlerts">0</strong>
+                <strong id="monthlyBudgets">0</strong>
             </article>
 
             <article>
                 <span>Metas</span>
-                <strong id="execGoals">0/0</strong>
+                <strong id="monthlyGoals">0</strong>
             </article>
 
             <article>
-                <span>Margen</span>
-                <strong id="execMargin">0%</strong>
+                <span>Alertas</span>
+                <strong id="monthlyAlerts">0</strong>
+            </article>
+
+            <article>
+                <span>Salud financiera</span>
+                <strong id="monthlyHealthScore">0/100</strong>
             </article>
         </div>
 
-        <div class="monthly-pro-charts">
-            <div class="monthly-pro-chart-card wide">
-                <div class="monthly-pro-chart-header">
+        <div class="monthly-chart-grid">
+            <article class="monthly-chart-card large">
+                <div class="monthly-chart-header">
                     <div>
-                        <span class="monthly-pro-kicker">Tendencia</span>
-                        <h4>Movimiento financiero</h4>
+                        <span class="monthly-kicker">Tendencia</span>
+                        <h4>Flujo acumulado y proyección</h4>
                     </div>
                 </div>
-                <canvas id="execTrendChart"></canvas>
-            </div>
+                <canvas id="monthlyTrendChart"></canvas>
+            </article>
 
-            <div class="monthly-pro-chart-card">
-                <div class="monthly-pro-chart-header">
+            <article class="monthly-chart-card">
+                <div class="monthly-chart-header">
                     <div>
-                        <span class="monthly-pro-kicker">Distribución</span>
+                        <span class="monthly-kicker">Distribución</span>
                         <h4>Ingresos vs gastos</h4>
                     </div>
                 </div>
-                <canvas id="execMixChart"></canvas>
-            </div>
+                <canvas id="monthlyMixChart"></canvas>
+            </article>
 
-            <div class="monthly-pro-chart-card">
-                <div class="monthly-pro-chart-header">
+            <article class="monthly-chart-card">
+                <div class="monthly-chart-header">
                     <div>
-                        <span class="monthly-pro-kicker">Operación</span>
-                        <h4>Actividad empresarial</h4>
+                        <span class="monthly-kicker">Categorías</span>
+                        <h4>Gastos principales</h4>
                     </div>
                 </div>
-                <canvas id="execOpsChart"></canvas>
-            </div>
+                <canvas id="monthlyCategoryChart"></canvas>
+            </article>
         </div>
 
-        <div class="monthly-pro-bottom">
-            <div class="monthly-pro-role-box">
-                <span class="monthly-pro-kicker">Resumen por permisos</span>
-                <h4 id="execRoleTitle">Resumen mensual</h4>
-                <div id="execRoleContent">
+        <div class="monthly-insight-layout">
+            <div class="role-report-box">
+                <span class="monthly-kicker">Resumen por permisos</span>
+                <h4 id="roleReportTitle">Resumen mensual</h4>
+                <div id="roleReportContent">
                     <p>El resumen se mostrará según el rol del usuario activo.</p>
                 </div>
             </div>
 
-            <div class="monthly-pro-ai">
+            <div class="monthly-ai-note">
                 <span>FinFlow Assistant</span>
-                <p id="execInsight">
-                    Analizando comportamiento mensual...
+                <p id="monthlyExecutiveInsight">
+                    Agrega movimientos para generar análisis ejecutivo.
                 </p>
             </div>
         </div>
     </div>
 </section>
-
                <section class="module-section" data-module="clientes">
     <article class="business-module-card">
         <div class="business-module-header">
@@ -1087,17 +1165,16 @@
 
     </main>
 
-    <footer class="site-footer">
-        <div>
-            <strong>FinFlow</strong>
-            <span>Proyecto Final · Fundamentos de Programación</span>
-        </div>
+<footer class="site-footer">
+    <div>
+        <strong>FinFlow</strong>
+        <span>Proyecto Final · Fundamentos de Programación</span>
+    </div>
 
-        <p>Diseñado como plataforma financiera modular para PYMES.</p>
-    </footer>
+    <p>Diseñado como plataforma financiera modular para PYMES.</p>
+</footer>
 
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="script.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="script.js"></script>
 </body>
 </html>
-
