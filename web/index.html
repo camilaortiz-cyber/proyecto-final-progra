@@ -724,40 +724,154 @@
                     </div>
                 </section>
 
-                <section class="module-section" data-module="clientes">
-                    <article class="module-mini-card">
-                        <h3>Clientes</h3>
-                        <p>Registra clientes, contactos y su historial comercial.</p>
-                    </article>
-                </section>
+               <section class="module-section" data-module="clientes">
+    <article class="business-module-card">
+        <div class="business-module-header">
+            <div>
+                <h3>Clientes</h3>
+                <p>Registra clientes, contactos y oportunidades comerciales.</p>
+            </div>
+
+            <span id="clientCountBadge">0 clientes</span>
+        </div>
+
+        <form class="business-form" id="clientForm">
+            <input type="text" id="clientName" placeholder="Nombre del cliente">
+            <input type="text" id="clientContact" placeholder="Contacto o encargado">
+            <input type="text" id="clientPhone" placeholder="Teléfono">
+            <input type="text" id="clientStatus" placeholder="Estado: activo, pendiente, potencial">
+            <button type="submit">Agregar cliente</button>
+        </form>
+
+        <div class="business-list" id="clientList">
+            <p class="empty-demo-message">Todavía no hay clientes registrados.</p>
+        </div>
+    </article>
+</section>
 
                 <section class="module-section" data-module="proveedores">
-                    <article class="module-mini-card">
-                        <h3>Proveedores</h3>
-                        <p>Administra proveedores, productos y pagos relacionados.</p>
-                    </article>
-                </section>
+    <article class="business-module-card">
+        <div class="business-module-header">
+            <div>
+                <h3>Proveedores</h3>
+                <p>Administra proveedores, productos, servicios y pagos pendientes.</p>
+            </div>
+
+            <span id="supplierCountBadge">0 proveedores</span>
+        </div>
+
+        <form class="business-form" id="supplierForm">
+            <input type="text" id="supplierName" placeholder="Nombre del proveedor">
+            <input type="text" id="supplierService" placeholder="Producto o servicio">
+            <input type="number" id="supplierAmount" placeholder="Monto mensual estimado en Q">
+            <input type="text" id="supplierStatus" placeholder="Estado: activo, pendiente, revisar">
+            <button type="submit">Agregar proveedor</button>
+        </form>
+
+        <div class="business-list" id="supplierList">
+            <p class="empty-demo-message">Todavía no hay proveedores registrados.</p>
+        </div>
+    </article>
+</section>
 
                 <section class="module-section" data-module="presupuestos">
-                    <article class="module-mini-card">
-                        <h3>Presupuestos</h3>
-                        <p>Compara el presupuesto planificado contra la realidad.</p>
-                    </article>
-                </section>
+    <article class="business-module-card budget-module-card">
+        <div class="business-module-header">
+            <div>
+                <h3>Presupuestos</h3>
+                <p>
+                    Define límites mensuales por categoría y compara automáticamente
+                    el presupuesto contra los gastos reales registrados.
+                </p>
+            </div>
 
+            <span id="budgetCountBadge">0 presupuestos</span>
+        </div>
+
+        <form class="business-form" id="budgetForm">
+            <input type="text" id="budgetCategory" placeholder="Categoría del presupuesto, ejemplo: Servicios">
+            <input type="month" id="budgetMonth">
+            <input type="number" id="budgetLimit" placeholder="Límite mensual en Q">
+            <input type="text" id="budgetOwner" placeholder="Responsable, ejemplo: Administración">
+            <button type="submit">Crear presupuesto</button>
+        </form>
+
+        <div class="budget-summary-grid">
+            <article>
+                <span>Presupuesto total</span>
+                <strong id="totalBudgetLimit">Q 0</strong>
+            </article>
+
+            <article>
+                <span>Gasto aplicado</span>
+                <strong id="totalBudgetUsed">Q 0</strong>
+            </article>
+
+            <article>
+                <span>Disponible</span>
+                <strong id="totalBudgetRemaining">Q 0</strong>
+            </article>
+        </div>
+
+        <div class="business-list" id="budgetList">
+            <p class="empty-demo-message">Todavía no hay presupuestos registrados.</p>
+        </div>
+    </article>
+</section> 
                 <section class="module-section" data-module="metas">
-                    <article class="module-mini-card">
-                        <h3>Metas</h3>
-                        <p>Visualiza el progreso hacia ventas, ahorro o utilidad.</p>
-                    </article>
-                </section>
+    <article class="business-module-card goals-module-card">
+        <div class="business-module-header">
+            <div>
+                <h3>Metas</h3>
+                <p>
+                    Define objetivos financieros reales y mide el avance con base
+                    en los ingresos, gastos y utilidad registrados.
+                </p>
+            </div>
+
+            <span id="goalCountBadge">0 metas</span>
+        </div>
+
+        <form class="business-form" id="goalForm">
+            <input type="text" id="goalName" placeholder="Nombre de la meta, ejemplo: Ventas de julio">
+
+            <select id="goalType">
+                <option value="ventas">Meta de ventas</option>
+                <option value="ahorro">Meta de ahorro</option>
+                <option value="utilidad">Meta de utilidad</option>
+            </select>
+
+            <input type="number" id="goalTarget" placeholder="Monto objetivo en Q">
+            <input type="month" id="goalMonth">
+
+            <button type="submit">Crear meta</button>
+        </form>
+
+        <div class="business-list" id="goalList">
+            <p class="empty-demo-message">Todavía no hay metas registradas.</p>
+        </div>
+    </article>
+</section>
 
                 <section class="module-section" data-module="alertas">
-                    <article class="module-mini-card">
-                        <h3>Alertas</h3>
-                        <p>Detecta gastos altos, bajo flujo de caja y metas en riesgo.</p>
-                    </article>
-                </section>
+    <article class="business-module-card alerts-module-card">
+        <div class="business-module-header">
+            <div>
+                <h3>Alertas</h3>
+                <p>
+                    FinFlow analiza movimientos, presupuestos, proveedores y metas
+                    para detectar situaciones que necesitan atención.
+                </p>
+            </div>
+
+            <span id="alertCountBadge">0 alertas</span>
+        </div>
+
+        <div class="business-list" id="alertList">
+            <p class="empty-demo-message">No hay alertas activas por ahora.</p>
+        </div>
+    </article>
+</section>
 
                 <section class="module-section" data-module="inventario">
                     <article class="module-mini-card">
@@ -847,3 +961,4 @@
     <script src="script.js"></script>
 </body>
 </html>
+

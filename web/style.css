@@ -2307,3 +2307,804 @@ body.finflow-session-active .module-mini-card h3 {
         min-height: auto;
     }
 } 
+/* ===== MÓDULOS EMPRESARIALES FUNCIONALES ===== */
+/* Estilos para convertir Clientes y Proveedores en módulos útiles. */
+
+.business-module-card {
+    padding: 34px;
+    border-radius: 34px;
+    background: rgba(255, 255, 255, 0.78);
+    box-shadow: var(--shadow-soft);
+    overflow: visible;
+}
+
+.business-module-header {
+    display: flex;
+    justify-content: space-between;
+    gap: 18px;
+    align-items: flex-start;
+    margin-bottom: 22px;
+}
+
+.business-module-header h3 {
+    font-size: 36px;
+    letter-spacing: -0.05em;
+    margin-bottom: 8px;
+}
+
+.business-module-header p {
+    color: var(--muted);
+    line-height: 1.6;
+}
+
+.business-module-header span {
+    padding: 10px 14px;
+    border-radius: 999px;
+    background: #050505;
+    color: white;
+    font-weight: 900;
+    white-space: nowrap;
+}
+
+.business-form {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 14px;
+    margin-bottom: 22px;
+}
+
+.business-form input {
+    width: 100%;
+    padding: 15px 18px;
+    border-radius: 18px;
+    border: 1px solid rgba(0, 0, 0, 0.12);
+    font: inherit;
+    background: white;
+}
+
+.business-form button {
+    grid-column: 1 / -1;
+    border: none;
+    border-radius: 999px;
+    padding: 15px 22px;
+    background: #050505;
+    color: white;
+    font-weight: 900;
+    cursor: pointer;
+}
+
+.business-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.business-item {
+    padding: 16px;
+    border-radius: 22px;
+    background: rgba(0, 0, 0, 0.045);
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 12px;
+    align-items: center;
+}
+
+.business-item strong {
+    display: block;
+    font-size: 18px;
+    margin-bottom: 4px;
+}
+
+.business-item span {
+    color: var(--muted);
+    line-height: 1.4;
+}
+
+.business-status {
+    padding: 8px 12px;
+    border-radius: 999px;
+    background: white;
+    font-weight: 900;
+    color: #050505;
+}
+
+@media (max-width: 900px) {
+    .business-form {
+        grid-template-columns: 1fr;
+    }
+
+    .business-module-header {
+        flex-direction: column;
+    }
+
+    .business-item {
+        grid-template-columns: 1fr;
+    }
+}  
+/* ===== PRESUPUESTOS FUNCIONALES ===== */
+/* Este bloque diseña el módulo de presupuestos reales por categoría. */
+
+
+/* Separa visualmente el módulo de presupuestos del resto. */
+.budget-module-card {
+    position: relative; /* Permite efectos internos futuros. */
+}
+
+
+/* Grid de resumen general de presupuestos. */
+.budget-summary-grid {
+    display: grid; /* Organiza las tarjetas en columnas. */
+    grid-template-columns: repeat(3, 1fr); /* Tres columnas: total, usado y disponible. */
+    gap: 14px; /* Espacio entre tarjetas. */
+    margin-bottom: 22px; /* Espacio antes de la lista de presupuestos. */
+}
+
+
+/* Tarjetas pequeñas del resumen de presupuestos. */
+.budget-summary-grid article {
+    padding: 18px; /* Espacio interno. */
+    border-radius: 22px; /* Bordes redondeados. */
+    background: rgba(0, 0, 0, 0.045); /* Fondo gris suave. */
+}
+
+
+/* Texto pequeño de cada resumen. */
+.budget-summary-grid span {
+    display: block; /* Coloca el texto en su propia línea. */
+    color: var(--muted); /* Color secundario del diseño. */
+    margin-bottom: 8px; /* Espacio antes del valor. */
+}
+
+
+/* Valor principal del resumen. */
+.budget-summary-grid strong {
+    font-size: 24px; /* Tamaño destacado. */
+    letter-spacing: -0.04em; /* Estilo visual premium. */
+}
+
+
+/* Tarjeta individual de cada presupuesto. */
+.budget-item {
+    padding: 18px; /* Espacio interno. */
+    border-radius: 24px; /* Bordes redondeados. */
+    background: rgba(0, 0, 0, 0.045); /* Fondo gris suave. */
+}
+
+
+/* Encabezado de cada presupuesto. */
+.budget-item-header {
+    display: flex; /* Coloca categoría y estado en línea. */
+    justify-content: space-between; /* Separa ambos extremos. */
+    gap: 14px; /* Espacio entre elementos. */
+    align-items: flex-start; /* Alinea arriba. */
+    margin-bottom: 14px; /* Espacio antes de detalles. */
+}
+
+
+/* Categoría del presupuesto. */
+.budget-item-header strong {
+    display: block; /* Ocupa su propia línea. */
+    font-size: 20px; /* Tamaño destacado. */
+    margin-bottom: 4px; /* Espacio inferior. */
+}
+
+
+/* Mes y responsable del presupuesto. */
+.budget-item-header span {
+    color: var(--muted); /* Color secundario. */
+    line-height: 1.4; /* Mejora lectura. */
+}
+
+
+/* Estado del presupuesto. */
+.budget-health {
+    padding: 8px 12px; /* Espacio interno. */
+    border-radius: 999px; /* Forma de cápsula. */
+    background: white; /* Fondo blanco. */
+    font-weight: 900; /* Texto fuerte. */
+    white-space: nowrap; /* Evita salto de línea. */
+}
+
+
+/* Barra externa de progreso del presupuesto. */
+.budget-progress {
+    height: 14px; /* Altura de barra. */
+    border-radius: 999px; /* Barra redondeada. */
+    background: rgba(0, 0, 0, 0.08); /* Fondo de barra. */
+    overflow: hidden; /* Evita que el progreso se salga. */
+    margin: 14px 0; /* Espacio arriba y abajo. */
+}
+
+
+/* Barra interna que muestra el porcentaje usado. */
+.budget-progress span {
+    display: block; /* Permite controlar ancho. */
+    height: 100%; /* Ocupa toda la altura de la barra. */
+    width: 0%; /* JavaScript actualiza este valor. */
+    border-radius: 999px; /* Redondea la barra interna. */
+    background: #050505; /* Color negro del sistema. */
+}
+
+
+/* Fila de números: límite, usado, disponible. */
+.budget-numbers {
+    display: grid; /* Organiza datos en columnas. */
+    grid-template-columns: repeat(3, 1fr); /* Tres columnas. */
+    gap: 10px; /* Espacio entre columnas. */
+}
+
+
+/* Cada número dentro del presupuesto. */
+.budget-numbers div {
+    padding: 12px; /* Espacio interno. */
+    border-radius: 18px; /* Bordes redondeados. */
+    background: white; /* Fondo blanco. */
+}
+
+
+/* Etiqueta pequeña del número. */
+.budget-numbers span {
+    display: block; /* Coloca etiqueta en línea propia. */
+    color: var(--muted); /* Color secundario. */
+    font-size: 13px; /* Texto pequeño. */
+    margin-bottom: 4px; /* Espacio antes del valor. */
+}
+
+
+/* Valor del número. */
+.budget-numbers strong {
+    font-size: 18px; /* Tamaño destacado. */
+}
+
+
+/* Botón para eliminar presupuesto. */
+.budget-delete-button {
+    margin-top: 14px; /* Espacio superior. */
+    border: none; /* Quita borde. */
+    border-radius: 999px; /* Botón redondo. */
+    padding: 10px 16px; /* Espacio interno. */
+    background: rgba(0, 0, 0, 0.08); /* Fondo suave. */
+    font-weight: 900; /* Texto fuerte. */
+    cursor: pointer; /* Cursor de botón. */
+}
+
+
+/* Responsive para presupuestos en pantallas pequeñas. */
+@media (max-width: 900px) {
+    .budget-summary-grid,
+    .budget-numbers {
+        grid-template-columns: 1fr; /* En móvil, una columna. */
+    }
+
+    .budget-item-header {
+        flex-direction: column; /* Encabezado vertical. */
+    }
+} 
+/* ===== METAS Y ALERTAS FUNCIONALES ===== */
+/* Este bloque diseña metas financieras y alertas automáticas. */
+
+
+/* El select de metas debe verse igual que los inputs. */
+.business-form select {
+    width: 100%; /* Ocupa todo el ancho disponible. */
+    padding: 15px 18px; /* Espacio interno cómodo. */
+    border-radius: 18px; /* Bordes redondeados. */
+    border: 1px solid rgba(0, 0, 0, 0.12); /* Borde suave. */
+    font: inherit; /* Usa la fuente del sitio. */
+    background: white; /* Fondo blanco. */
+}
+
+
+/* Tarjeta individual de meta. */
+.goal-item {
+    padding: 18px; /* Espacio interno. */
+    border-radius: 24px; /* Bordes redondeados. */
+    background: rgba(0, 0, 0, 0.045); /* Fondo gris suave. */
+}
+
+
+/* Encabezado de meta. */
+.goal-item-header {
+    display: flex; /* Coloca título y estado en línea. */
+    justify-content: space-between; /* Separa extremos. */
+    gap: 14px; /* Espacio entre elementos. */
+    align-items: flex-start; /* Alinea arriba. */
+    margin-bottom: 14px; /* Espacio inferior. */
+}
+
+
+/* Nombre de la meta. */
+.goal-item-header strong {
+    display: block; /* Ocupa línea propia. */
+    font-size: 20px; /* Tamaño destacado. */
+    margin-bottom: 4px; /* Espacio debajo. */
+}
+
+
+/* Detalles de la meta. */
+.goal-item-header span {
+    color: var(--muted); /* Color secundario. */
+    line-height: 1.4; /* Mejor lectura. */
+}
+
+
+/* Estado de la meta. */
+.goal-health {
+    padding: 8px 12px; /* Espacio interno. */
+    border-radius: 999px; /* Forma cápsula. */
+    background: white; /* Fondo blanco. */
+    font-weight: 900; /* Texto fuerte. */
+    white-space: nowrap; /* Evita salto. */
+}
+
+
+/* Barra de progreso de meta. */
+.goal-progress {
+    height: 14px; /* Altura de la barra. */
+    border-radius: 999px; /* Barra redondeada. */
+    background: rgba(0, 0, 0, 0.08); /* Fondo gris. */
+    overflow: hidden; /* Evita desbordes. */
+    margin: 14px 0; /* Espacio vertical. */
+}
+
+
+/* Progreso interno de meta. */
+.goal-progress span {
+    display: block; /* Permite ancho dinámico. */
+    height: 100%; /* Ocupa toda la altura. */
+    width: 0%; /* JS actualiza el ancho. */
+    border-radius: 999px; /* Redondeado. */
+    background: #050505; /* Negro del sistema. */
+}
+
+
+/* Números de la meta. */
+.goal-numbers {
+    display: grid; /* Organiza en columnas. */
+    grid-template-columns: repeat(3, 1fr); /* Tres datos principales. */
+    gap: 10px; /* Espacio entre tarjetas. */
+}
+
+
+/* Tarjeta pequeña de número. */
+.goal-numbers div {
+    padding: 12px; /* Espacio interno. */
+    border-radius: 18px; /* Bordes redondeados. */
+    background: white; /* Fondo blanco. */
+}
+
+
+/* Etiqueta pequeña. */
+.goal-numbers span {
+    display: block; /* Línea propia. */
+    color: var(--muted); /* Color secundario. */
+    font-size: 13px; /* Tamaño pequeño. */
+    margin-bottom: 4px; /* Espacio antes del valor. */
+}
+
+
+/* Valor fuerte. */
+.goal-numbers strong {
+    font-size: 18px; /* Tamaño visible. */
+}
+
+
+/* Botón para eliminar meta. */
+.goal-delete-button {
+    margin-top: 14px; /* Espacio superior. */
+    border: none; /* Sin borde. */
+    border-radius: 999px; /* Botón redondo. */
+    padding: 10px 16px; /* Espacio interno. */
+    background: rgba(0, 0, 0, 0.08); /* Fondo suave. */
+    font-weight: 900; /* Texto fuerte. */
+    cursor: pointer; /* Cursor de botón. */
+}
+
+
+/* Alerta individual. */
+.alert-item {
+    padding: 18px; /* Espacio interno. */
+    border-radius: 24px; /* Bordes redondeados. */
+    background: #050505; /* Fondo negro para resaltar. */
+    color: white; /* Texto blanco. */
+}
+
+
+/* Título de alerta. */
+.alert-item strong {
+    display: block; /* Título en línea propia. */
+    font-size: 20px; /* Tamaño destacado. */
+    margin-bottom: 6px; /* Espacio inferior. */
+}
+
+
+/* Texto de alerta. */
+.alert-item span {
+    color: rgba(255, 255, 255, 0.72); /* Blanco suave. */
+    line-height: 1.5; /* Mejor lectura. */
+}
+
+
+/* Etiqueta de prioridad. */
+.alert-priority {
+    display: inline-flex; /* Formato cápsula. */
+    margin-top: 12px; /* Espacio superior. */
+    padding: 8px 12px; /* Espacio interno. */
+    border-radius: 999px; /* Cápsula redondeada. */
+    background: white; /* Fondo blanco. */
+    color: #050505; /* Texto negro. */
+    font-weight: 900; /* Texto fuerte. */
+}
+
+
+/* Responsive para metas. */
+@media (max-width: 900px) {
+    .goal-item-header {
+        flex-direction: column; /* Encabezado vertical en móvil. */
+    }
+
+    .goal-numbers {
+        grid-template-columns: 1fr; /* Números en una columna. */
+    }
+} 
+
+/* ===== ACCIONES DE PROVEEDORES ===== */
+/* Estilos para cambiar estado de proveedores y eliminarlos. */
+
+.supplier-item {
+    grid-template-columns: 1fr auto;
+}
+
+.supplier-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.supplier-status-button,
+.supplier-delete-button {
+    border: none;
+    border-radius: 999px;
+    padding: 8px 12px;
+    font: inherit;
+    font-weight: 900;
+    cursor: pointer;
+    background: white;
+    color: #050505;
+}
+
+.supplier-delete-button {
+    background: rgba(0, 0, 0, 0.12);
+}
+
+@media (max-width: 900px) {
+    .supplier-item {
+        grid-template-columns: 1fr;
+    }
+
+    .supplier-actions {
+        justify-content: flex-start;
+    }
+} 
+
+/* ===== MENÚ DE ACCIONES CON TRES PUNTOS ===== */
+/* Este bloque reemplaza botones visibles por un menú elegante de acciones. */
+
+.action-menu-wrapper {
+    position: relative; /* Permite posicionar el menú debajo del botón. */
+    display: inline-flex; /* Mantiene el menú compacto. */
+}
+
+.action-menu-button {
+    width: 44px; /* Tamaño del botón. */
+    height: 44px; /* Altura del botón. */
+    border: none; /* Quita borde. */
+    border-radius: 50%; /* Lo vuelve circular. */
+    background: white; /* Fondo blanco. */
+    color: #050505; /* Texto negro. */
+    font-size: 26px; /* Tamaño de los tres puntos. */
+    font-weight: 900; /* Hace los puntos más visibles. */
+    cursor: pointer; /* Cursor de botón. */
+}
+
+.action-menu {
+    position: absolute; /* Posiciona el menú flotante. */
+    bottom: 52px; /* Lo abre hacia arriba del botón. */
+    right: 0; /* Lo alinea a la derecha. */
+    min-width: 180px; /* Ancho mínimo del menú. */
+    padding: 8px; /* Espacio interno. */
+    border-radius: 18px; /* Bordes redondeados. */
+    background: #050505; /* Fondo negro. */
+    box-shadow: var(--shadow-soft); /* Sombra del sistema. */
+    display: none; /* Oculto por defecto. */
+    z-index: 999; /* Lo pone por encima de las tarjetas. */
+}
+
+/* El menú ahora se abre con clic usando la clase is-open. */
+.action-menu-wrapper.is-open .action-menu {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.action-menu button {
+    width: 100%; /* Cada opción ocupa todo el ancho. */
+    border: none; /* Sin borde. */
+    border-radius: 12px; /* Bordes redondeados. */
+    padding: 10px 12px; /* Espacio interno. */
+    background: transparent; /* Fondo transparente. */
+    color: white; /* Texto blanco. */
+    text-align: left; /* Alinea texto a la izquierda. */
+    font: inherit; /* Usa fuente del sitio. */
+    font-weight: 800; /* Texto fuerte. */
+    cursor: pointer; /* Cursor de botón. */
+}
+
+.action-menu button:hover {
+    background: rgba(255, 255, 255, 0.12); /* Efecto hover. */
+}
+
+.action-menu button.danger {
+    color: #fecaca; /* Rojo suave para eliminar. */
+} 
+
+/* ===== ACCIONES PARA CLIENTES, PRESUPUESTOS Y METAS ===== */
+/* Este bloque reutiliza el menú de tres puntos en más módulos. */
+
+.client-item {
+    grid-template-columns: 1fr auto; /* Información a la izquierda y acciones a la derecha. */
+}
+
+.client-actions {
+    display: flex; /* Coloca estado y menú en línea. */
+    align-items: center; /* Centra verticalmente. */
+    justify-content: flex-end; /* Manda acciones hacia la derecha. */
+    gap: 8px; /* Espacio entre estado y menú. */
+    flex-wrap: wrap; /* Permite que baje si no cabe. */
+}
+
+.item-action-row {
+    display: flex; /* Permite alinear el menú. */
+    justify-content: flex-end; /* Manda los tres puntos a la derecha. */
+    margin-top: 14px; /* Espacio respecto al contenido anterior. */
+}
+
+@media (max-width: 900px) {
+    .client-item {
+        grid-template-columns: 1fr; /* En móvil se apila. */
+    }
+
+    .client-actions {
+        justify-content: flex-start; /* En móvil alinea a la izquierda. */
+    }
+}
+
+/* Evita que el preloader vuelva a tapar la app si ya cargó. */
+body.finflow-session-active .preloader {
+    display: none !important;
+} 
+
+/* ===== ACCIONES EN MOVIMIENTOS ===== */
+/* Este bloque permite que ingresos y gastos tengan menú de tres puntos. */
+
+.movement-item {
+    grid-template-columns: auto 1fr auto auto;
+    gap: 18px;
+}
+
+.movement-item .action-menu-wrapper {
+    align-self: center;
+}
+
+.movement-item .action-menu-button {
+    width: 38px;
+    height: 38px;
+    font-size: 22px;
+}
+
+@media (max-width: 900px) {
+    .movement-item {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* ===== FIX FINAL MENÚ UNIVERSAL DE TRES PUNTOS ===== */
+/* Este bloque fuerza que todos los menús de tres puntos funcionen igual. */
+
+.action-menu-wrapper {
+    position: relative;
+    display: inline-flex;
+    z-index: 30;
+}
+
+.action-menu-button {
+    width: 44px;
+    height: 44px;
+    border: none;
+    border-radius: 50%;
+    background: white;
+    color: #050505;
+    font-size: 24px;
+    font-weight: 900;
+    cursor: pointer;
+}
+
+.action-menu {
+    position: absolute;
+    top: 52px;
+    right: 0;
+    bottom: auto;
+    min-width: 210px;
+    padding: 10px;
+    border-radius: 20px;
+    background: #050505;
+    box-shadow: var(--shadow-soft);
+    display: none;
+    z-index: 99999;
+}
+
+.action-menu-wrapper.is-open .action-menu {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.action-menu button {
+    width: 100%;
+    border: none;
+    border-radius: 14px;
+    padding: 12px 14px;
+    background: transparent;
+    color: white;
+    text-align: left;
+    font: inherit;
+    font-weight: 900;
+    cursor: pointer;
+}
+
+.action-menu button:hover {
+    background: rgba(255, 255, 255, 0.12);
+}
+
+.action-menu button.danger {
+    color: #fecaca;
+}
+
+.movement-panel,
+.movement-list,
+.movement-item,
+.business-module-card,
+.business-list,
+.business-item,
+.budget-item,
+.goal-item,
+.supplier-item,
+.client-item {
+    overflow: visible !important;
+}
+
+.movement-item {
+    position: relative;
+    grid-template-columns: auto 1fr auto auto;
+    gap: 18px;
+}
+
+.budget-item,
+.goal-item {
+    position: relative;
+}
+
+.item-action-row {
+    position: relative;
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 14px;
+} 
+
+/* ===== FIX FINAL UNIVERSAL DE MENÚS ===== */
+/* Este bloque hace que todos los menús de tres puntos se comporten igual. */
+
+.action-menu-wrapper {
+    position: relative !important;
+    display: inline-flex !important;
+    z-index: 1000 !important;
+}
+
+.action-menu-button {
+    width: 44px !important;
+    height: 44px !important;
+    border: none !important;
+    border-radius: 50% !important;
+    background: white !important;
+    color: #050505 !important;
+    font-size: 24px !important;
+    font-weight: 900 !important;
+    cursor: pointer !important;
+}
+
+.action-menu {
+    position: absolute !important;
+    top: 52px !important;
+    right: 0 !important;
+    bottom: auto !important;
+    min-width: 220px !important;
+    padding: 10px !important;
+    border-radius: 20px !important;
+    background: #050505 !important;
+    box-shadow: var(--shadow-soft) !important;
+    display: none !important;
+    z-index: 999999 !important;
+}
+
+.action-menu-wrapper.is-open .action-menu {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 8px !important;
+}
+
+.action-menu button {
+    width: 100% !important;
+    border: none !important;
+    border-radius: 14px !important;
+    padding: 12px 14px !important;
+    background: transparent !important;
+    color: white !important;
+    text-align: left !important;
+    font: inherit !important;
+    font-weight: 900 !important;
+    cursor: pointer !important;
+}
+
+.action-menu button:hover {
+    background: rgba(255, 255, 255, 0.12) !important;
+}
+
+.action-menu button.danger {
+    color: #fecaca !important;
+}
+
+.movement-panel,
+.movement-list,
+.movement-item,
+.business-module-card,
+.business-list,
+.business-item,
+.supplier-item,
+.client-item,
+.budget-item,
+.goal-item {
+    overflow: visible !important;
+}
+
+/* ===== AJUSTE FINAL POPOVER DE ACCIONES ===== */
+/* Hace que los menús no se monten sobre el siguiente módulo. */
+
+.supplier-item .action-menu,
+.client-item .action-menu,
+.budget-item .action-menu,
+.goal-item .action-menu {
+    top: auto !important;
+    bottom: 52px !important;
+    right: 0 !important;
+    min-width: 190px !important;
+    max-width: 220px !important;
+    padding: 8px !important;
+    border-radius: 18px !important;
+}
+
+.supplier-item .action-menu button,
+.client-item .action-menu button,
+.budget-item .action-menu button,
+.goal-item .action-menu button {
+    font-size: 15px !important;
+    line-height: 1.2 !important;
+    padding: 10px 12px !important;
+}
+
+.movement-item .action-menu {
+    top: 52px !important;
+    bottom: auto !important;
+    right: 0 !important;
+} 
