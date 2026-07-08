@@ -78,61 +78,72 @@ def mostrar_usuario(usuario_actual):
 
 
 # Verifica si un usuario tiene permiso para acceder a un módulo.
-def tiene_permiso(usuario, modulo):  # Verifica si un usuario tiene permiso para acceder a un módulo.
-    rol = usuario["rol"]  # Obtiene el rol del usuario actual.
-
-    permisos = {  # Diccionario que define qué módulos puede usar cada rol.
-        "admin": [  # El administrador tiene control total del sistema.
-            "dashboard",
+def tiene_permiso(usuario_actual, modulo):
+    permisos = {
+        "admin": [
+            "usuarios",
             "ingresos",
             "gastos",
-            "flujo_caja",
             "reportes",
-            "ia_financiera",
-            "usuarios",
-            "auditoria",
-            "configuracion",
+            "reportes_mensuales",
+            "ia",
             "empresas",
             "clientes",
             "proveedores",
             "presupuestos",
             "metas",
             "alertas",
-            "sesiones"
+            "sesiones",
+            "configuracion_empresa"
         ],
-
-        "gerente": [  # El gerente ve información para tomar decisiones.
-            "dashboard",
-            "flujo_caja",
+        "administrador": [
+            "usuarios",
+            "ingresos",
+            "gastos",
             "reportes",
-            "ia_financiera",
+            "reportes_mensuales",
+            "ia",
             "empresas",
+            "clientes",
+            "proveedores",
+            "presupuestos",
+            "metas",
+            "alertas",
+            "sesiones",
+            "configuracion_empresa"
+        ],
+        "gerente": [
+            "ingresos",
+            "gastos",
+            "reportes",
+            "reportes_mensuales",
+            "ia",
             "clientes",
             "proveedores",
             "presupuestos",
             "metas",
             "alertas"
         ],
-
-        "contador": [  # El contador registra y revisa información financiera.
-            "dashboard",
+        "contador": [
             "ingresos",
             "gastos",
-            "flujo_caja",
             "reportes",
-            "ia_financiera",
+            "reportes_mensuales",
             "presupuestos",
-            "metas",
-            "alertas"
+            "metas"
         ],
-
-        "empleado": [  # El empleado tiene acceso limitado y operativo.
-            "dashboard",
+        "empleado": [
             "ingresos",
-            "gastos",
-            "ia_financiera"
+            "gastos"
         ]
     }
+
+    rol = usuario_actual["rol"]
+
+    if rol in permisos:
+        return modulo in permisos[rol]
+
+    return False
 
     if rol not in permisos:  # Si el rol no existe en el diccionario.
         return False  # No se concede permiso.
