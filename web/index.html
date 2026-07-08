@@ -34,7 +34,7 @@
             <a href="#futuro">Futuro</a>
         </nav>
 
-        <a href="#demo" class="nav-cta magnetic">Ver experiencia</a>
+        <a href="#app-demo" class="nav-cta magnetic">Comenzar experiencia</a>
     </header>
 
     <main>
@@ -268,7 +268,7 @@
             <div class="modules-grid">
                 <article class="module-card reveal" data-status="mvp" data-module-name="Dashboard">
                     <div class="module-icon">◇</div>
-                    <h3>Dashboard</h3>
+                    <h3>Resumen financiero</h3>
                     <p>Resumen ejecutivo con ingresos, gastos, utilidad y estado financiero.</p>
                     <span>Activo</span>
                 </article>
@@ -506,15 +506,46 @@
 <section class="interactive-app-section" id="app-demo">
     <div class="section-heading reveal">
         <p class="eyebrow">Demo funcional</p>
-        <h2>Prueba el cerebro visual de FinFlow.</h2>
+        <h2>Comienza la experiencia FinFlow.</h2>
         <p>
-            Esta demo permite registrar ingresos y gastos directamente en la página,
-            calcular utilidad y activar módulos visualmente. El Dashboard siempre está visible
-            como pantalla principal, y el resto de módulos aparecen o desaparecen según tu selección.
+            Inicia sesión con un usuario de prueba y entra a una versión visual de FinFlow
+            adaptada por rol. Cada perfil muestra módulos distintos, como si la empresa
+            estuviera usando su propio sistema financiero.
         </p>
     </div>
 
-    <div class="app-lab reveal">
+    <div class="experience-login-card reveal" id="experienceLogin">
+        <div class="login-copy">
+            <p class="eyebrow">Acceso FinFlow OS</p>
+            <h3>Entra a tu empresa.</h3>
+            <p>
+                Usa un rol de prueba para vivir FinFlow como administrador, gerente,
+                contador o empleado. La experiencia cambia según el usuario.
+            </p>
+        </div>
+
+        <form class="experience-login-form" id="experienceLoginForm">
+            <label>
+                Usuario
+                <input type="text" id="experienceUsername" placeholder="admin, gerente, contador o empleado">
+            </label>
+
+            <label>
+                Contraseña
+                <input type="password" id="experiencePassword" placeholder="1234">
+            </label>
+
+            <button type="submit">Entrar a FinFlow</button>
+
+            <p class="login-hint">
+                Usuarios demo: admin / gerente / contador / empleado · contraseña: 1234
+            </p>
+
+            <p class="login-error" id="experienceLoginError"></p>
+        </form>
+    </div>
+
+    <div class="app-lab reveal finflow-app-shell" id="finflowAppShell">
         <div class="app-lab-sidebar">
             <div class="app-user-card">
                 <span class="app-avatar">F</span>
@@ -522,6 +553,13 @@
                     <strong>FinFlow Demo</strong>
                     <p>Empresa: PYME Premium</p>
                 </div>
+            </div>
+
+            <div class="session-role-card" id="sessionRoleCard" hidden>
+                <span>Sesión activa</span>
+                <strong id="sessionRoleName">Administrador</strong>
+                <p id="sessionRoleDescription">Control total del sistema.</p>
+                <button type="button" id="logoutExperienceButton">Cerrar sesión</button>
             </div>
 
             <div class="module-switches">
@@ -575,6 +613,16 @@
                 <label>
                     <input type="checkbox" class="module-toggle" value="inventario">
                     Inventario
+                </label>
+
+                <label>
+                    <input type="checkbox" class="module-toggle" value="neon">
+                    Neon Cloud
+                </label>
+
+                <label>
+                    <input type="checkbox" class="module-toggle" value="ia-roles">
+                    IA por rol
                 </label>
             </div>
 
@@ -676,40 +724,154 @@
                     </div>
                 </section>
 
-                <section class="module-section" data-module="clientes">
-                    <article class="module-mini-card">
-                        <h3>Clientes</h3>
-                        <p>Registra clientes, contactos y su historial comercial.</p>
-                    </article>
-                </section>
+               <section class="module-section" data-module="clientes">
+    <article class="business-module-card">
+        <div class="business-module-header">
+            <div>
+                <h3>Clientes</h3>
+                <p>Registra clientes, contactos y oportunidades comerciales.</p>
+            </div>
+
+            <span id="clientCountBadge">0 clientes</span>
+        </div>
+
+        <form class="business-form" id="clientForm">
+            <input type="text" id="clientName" placeholder="Nombre del cliente">
+            <input type="text" id="clientContact" placeholder="Contacto o encargado">
+            <input type="text" id="clientPhone" placeholder="Teléfono">
+            <input type="text" id="clientStatus" placeholder="Estado: activo, pendiente, potencial">
+            <button type="submit">Agregar cliente</button>
+        </form>
+
+        <div class="business-list" id="clientList">
+            <p class="empty-demo-message">Todavía no hay clientes registrados.</p>
+        </div>
+    </article>
+</section>
 
                 <section class="module-section" data-module="proveedores">
-                    <article class="module-mini-card">
-                        <h3>Proveedores</h3>
-                        <p>Administra proveedores, productos y pagos relacionados.</p>
-                    </article>
-                </section>
+    <article class="business-module-card">
+        <div class="business-module-header">
+            <div>
+                <h3>Proveedores</h3>
+                <p>Administra proveedores, productos, servicios y pagos pendientes.</p>
+            </div>
+
+            <span id="supplierCountBadge">0 proveedores</span>
+        </div>
+
+        <form class="business-form" id="supplierForm">
+            <input type="text" id="supplierName" placeholder="Nombre del proveedor">
+            <input type="text" id="supplierService" placeholder="Producto o servicio">
+            <input type="number" id="supplierAmount" placeholder="Monto mensual estimado en Q">
+            <input type="text" id="supplierStatus" placeholder="Estado: activo, pendiente, revisar">
+            <button type="submit">Agregar proveedor</button>
+        </form>
+
+        <div class="business-list" id="supplierList">
+            <p class="empty-demo-message">Todavía no hay proveedores registrados.</p>
+        </div>
+    </article>
+</section>
 
                 <section class="module-section" data-module="presupuestos">
-                    <article class="module-mini-card">
-                        <h3>Presupuestos</h3>
-                        <p>Compara el presupuesto planificado contra la realidad.</p>
-                    </article>
-                </section>
+    <article class="business-module-card budget-module-card">
+        <div class="business-module-header">
+            <div>
+                <h3>Presupuestos</h3>
+                <p>
+                    Define límites mensuales por categoría y compara automáticamente
+                    el presupuesto contra los gastos reales registrados.
+                </p>
+            </div>
 
+            <span id="budgetCountBadge">0 presupuestos</span>
+        </div>
+
+        <form class="business-form" id="budgetForm">
+            <input type="text" id="budgetCategory" placeholder="Categoría del presupuesto, ejemplo: Servicios">
+            <input type="month" id="budgetMonth">
+            <input type="number" id="budgetLimit" placeholder="Límite mensual en Q">
+            <input type="text" id="budgetOwner" placeholder="Responsable, ejemplo: Administración">
+            <button type="submit">Crear presupuesto</button>
+        </form>
+
+        <div class="budget-summary-grid">
+            <article>
+                <span>Presupuesto total</span>
+                <strong id="totalBudgetLimit">Q 0</strong>
+            </article>
+
+            <article>
+                <span>Gasto aplicado</span>
+                <strong id="totalBudgetUsed">Q 0</strong>
+            </article>
+
+            <article>
+                <span>Disponible</span>
+                <strong id="totalBudgetRemaining">Q 0</strong>
+            </article>
+        </div>
+
+        <div class="business-list" id="budgetList">
+            <p class="empty-demo-message">Todavía no hay presupuestos registrados.</p>
+        </div>
+    </article>
+</section> 
                 <section class="module-section" data-module="metas">
-                    <article class="module-mini-card">
-                        <h3>Metas</h3>
-                        <p>Visualiza el progreso hacia ventas, ahorro o utilidad.</p>
-                    </article>
-                </section>
+    <article class="business-module-card goals-module-card">
+        <div class="business-module-header">
+            <div>
+                <h3>Metas</h3>
+                <p>
+                    Define objetivos financieros reales y mide el avance con base
+                    en los ingresos, gastos y utilidad registrados.
+                </p>
+            </div>
+
+            <span id="goalCountBadge">0 metas</span>
+        </div>
+
+        <form class="business-form" id="goalForm">
+            <input type="text" id="goalName" placeholder="Nombre de la meta, ejemplo: Ventas de julio">
+
+            <select id="goalType">
+                <option value="ventas">Meta de ventas</option>
+                <option value="ahorro">Meta de ahorro</option>
+                <option value="utilidad">Meta de utilidad</option>
+            </select>
+
+            <input type="number" id="goalTarget" placeholder="Monto objetivo en Q">
+            <input type="month" id="goalMonth">
+
+            <button type="submit">Crear meta</button>
+        </form>
+
+        <div class="business-list" id="goalList">
+            <p class="empty-demo-message">Todavía no hay metas registradas.</p>
+        </div>
+    </article>
+</section>
 
                 <section class="module-section" data-module="alertas">
-                    <article class="module-mini-card">
-                        <h3>Alertas</h3>
-                        <p>Detecta gastos altos, bajo flujo de caja y metas en riesgo.</p>
-                    </article>
-                </section>
+    <article class="business-module-card alerts-module-card">
+        <div class="business-module-header">
+            <div>
+                <h3>Alertas</h3>
+                <p>
+                    FinFlow analiza movimientos, presupuestos, proveedores y metas
+                    para detectar situaciones que necesitan atención.
+                </p>
+            </div>
+
+            <span id="alertCountBadge">0 alertas</span>
+        </div>
+
+        <div class="business-list" id="alertList">
+            <p class="empty-demo-message">No hay alertas activas por ahora.</p>
+        </div>
+    </article>
+</section>
 
                 <section class="module-section" data-module="inventario">
                     <article class="module-mini-card">
@@ -717,10 +879,64 @@
                         <p>Control básico para productos, stock y alertas futuras.</p>
                     </article>
                 </section>
+
+                <section class="module-section" data-module="neon">
+                    <article class="module-mini-card neon-cloud-card">
+                        <h3>Neon Cloud</h3>
+                        <p>
+                            FinFlow está preparado para guardar sesiones, usuarios y actividad
+                            empresarial en una base de datos PostgreSQL en la nube.
+                        </p>
+
+                        <div class="cloud-status">
+                            <span></span>
+                            Conectado a Neon PostgreSQL
+                        </div>
+
+                        <div class="cloud-grid">
+                            <div>
+                                <strong>4</strong>
+                                <span>roles</span>
+                            </div>
+
+                            <div>
+                                <strong>SQL</strong>
+                                <span>base cloud</span>
+                            </div>
+
+                            <div>
+                                <strong>24/7</strong>
+                                <span>disponible</span>
+                            </div>
+                        </div>
+                    </article>
+                </section>
+
+                <section class="module-section" data-module="ia-roles">
+                    <article class="module-mini-card role-ai-card">
+                        <h3>IA por rol</h3>
+                        <p>
+                            La inteligencia financiera adapta sus recomendaciones según el tipo
+                            de usuario que inicia sesión.
+                        </p>
+
+                        <select id="roleAiSelect">
+                            <option value="admin">Administrador</option>
+                            <option value="gerente">Gerente</option>
+                            <option value="contador">Contador</option>
+                            <option value="empleado">Empleado</option>
+                        </select>
+
+                        <div class="role-ai-response" id="roleAiResponse">
+                            Como administrador, la IA ayuda a analizar módulos, usuarios,
+                            auditoría y reportes completos.
+                        </div>
+                    </article>
+                </section>
             </div>
         </div>
     </div>
-</section> 
+</section>
             <div class="closing-card reveal">
                 <p class="eyebrow">FinFlow</p>
                 <h2>Una forma más elegante de entender tu empresa.</h2>
@@ -745,3 +961,4 @@
     <script src="script.js"></script>
 </body>
 </html>
+
