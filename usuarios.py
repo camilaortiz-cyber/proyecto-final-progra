@@ -95,11 +95,37 @@ def tiene_permiso(usuario_actual, modulo):
             "alertas",
             "sesiones",
             "configuracion_empresa"
+            "sesiones"
+            "reportes_mensuales",
         ],
         "administrador": [
             "usuarios",
             "ingresos",
             "gastos",
+
+                "administrador": [
+            "dashboard",
+            "ingresos",
+            "gastos",
+            "flujo_caja",
+            "reportes",
+            "reportes_mensuales",
+            "ia_financiera",
+            "usuarios",
+            "auditoria",
+            "configuracion",
+            "empresas",
+            "clientes",
+            "proveedores",
+            "presupuestos",
+            "metas",
+            "alertas",
+            "sesiones"
+        ],
+
+        "gerente": [  # El gerente ve información para tomar decisiones.
+            "dashboard",
+            "flujo_caja",
             "reportes",
             "reportes_mensuales",
             "ia",
@@ -111,6 +137,8 @@ def tiene_permiso(usuario_actual, modulo):
             "alertas",
             "sesiones",
             "configuracion_empresa"
+            "alertas"
+            "reportes_mensuales",
         ],
         "gerente": [
             "ingresos",
@@ -123,6 +151,7 @@ def tiene_permiso(usuario_actual, modulo):
             "presupuestos",
             "metas",
             "alertas"
+            "reportes_mensuales",
         ],
         "contador": [
             "ingresos",
@@ -135,6 +164,8 @@ def tiene_permiso(usuario_actual, modulo):
         "empleado": [
             "ingresos",
             "gastos"
+            "ia_financiera"
+            "reportes_mensuales",
         ]
     }
 

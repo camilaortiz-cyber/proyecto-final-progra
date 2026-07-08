@@ -972,7 +972,7 @@ for (let i = 0; i < moduleToggles.length; i++) {
         roleAiResponse.textContent = roleAiMessages[username]; // Muestra el mensaje del rol.
     }
 
-    customizeFormsByRole(username); // Personaliza formularios y asistente según el rol.
+        customizeFormsByRole(username);
 
     localStorage.setItem("finflowExperienceUser", username); // Guarda la sesión en el navegador.
 

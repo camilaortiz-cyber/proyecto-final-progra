@@ -11,8 +11,16 @@
         "id": 2,
         "usuario": "admin",
         "rol": "administrador",
-        "inicio": "2026-07-08 13:45:02",
-        "cierre": "2026-07-08 13:45:53",
-        "estado": "cerrada"
+        "inicio": "2026-07-08 09:47:41",
+        "cierre": "Sesion activa",
+        "estado": "activa"
+    },
+    {
+        "id": 3,
+        "usuario": "admin",
+        "rol": "administrador",
+        "inicio": "2026-07-08 09:55:16",
+        "cierre": "Sesion activa",
+        "estado": "activa"
     }
 ]
