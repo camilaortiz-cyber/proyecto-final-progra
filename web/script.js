@@ -468,3 +468,257 @@ if (resetDemoButton) {
 renderDemoApp();
 restoreModules();
 
+// ===== EXPERIENCIA LOGIN + ROLES =====
+// Este bloque hace que FinFlow tenga una experiencia tipo app interna.
+// Antes de iniciar sesión se ve la landing.
+// Después de iniciar sesión se oculta la landing y se muestra solo la app.
+
+// Diccionario de usuarios demo disponibles en la experiencia web.
+const experienceUsers = {
+    admin: {
+        password: "1234", // Contraseña demo del administrador.
+        roleName: "Administrador", // Nombre visual del rol.
+        description: "Gestiona la empresa, módulos, usuarios, reportes y configuración general.", // Descripción elegante del rol.
+        modules: ["ingresos", "gastos", "reportes", "ia", "clientes", "proveedores", "presupuestos", "metas", "alertas", "neon"] // Módulos visibles para admin.
+    },
+    gerente: {
+        password: "1234", // Contraseña demo del gerente.
+        roleName: "Gerente", // Nombre visual del rol.
+        description: "Consulta indicadores, flujo financiero, reportes y alertas para tomar decisiones.", // Descripción del rol.
+        modules: ["reportes", "ia", "metas", "alertas", "neon"] // Módulos visibles para gerente.
+    },
+    contador: {
+        password: "1234", // Contraseña demo del contador.
+        roleName: "Contador", // Nombre visual del rol.
+        description: "Registra, revisa y analiza ingresos, gastos, presupuestos y reportes financieros.", // Descripción del rol.
+        modules: ["ingresos", "gastos", "reportes", "ia", "presupuestos", "metas"] // Módulos visibles para contador.
+    },
+    empleado: {
+        password: "1234", // Contraseña demo del empleado.
+        roleName: "Empleado", // Nombre visual del rol.
+        description: "Registra ventas, ingresos diarios y gastos operativos de caja chica.", // Descripción sin decir acceso limitado.
+        modules: ["ingresos", "gastos", "ia"] // Módulos visibles para empleado.
+    }
+};
+
+// Mensajes personalizados del asistente financiero según el rol.
+const roleAiMessages = {
+    admin: "Hola, puedo ayudarte a revisar la operación completa de la empresa, reportes, usuarios, módulos y decisiones generales.",
+    gerente: "Hola, puedo ayudarte a interpretar indicadores financieros, utilidad, flujo de caja, metas y alertas importantes.",
+    contador: "Hola, puedo ayudarte a revisar ingresos, gastos, presupuestos, categorías y reportes financieros.",
+    empleado: "Hola, puedo ayudarte a registrar ventas, ingresos del día y gastos de caja chica de forma ordenada."
+};
+
+// Obtiene el formulario de login desde el HTML.
+const experienceLoginForm = document.getElementById("experienceLoginForm");
+
+// Obtiene el input donde se escribe el usuario.
+const experienceUsername = document.getElementById("experienceUsername");
+
+// Obtiene el input donde se escribe la contraseña.
+const experiencePassword = document.getElementById("experiencePassword");
+
+// Obtiene el espacio donde se muestra error de login.
+const experienceLoginError = document.getElementById("experienceLoginError");
+
+// Obtiene la tarjeta completa del login.
+const experienceLogin = document.getElementById("experienceLogin");
+
+// Obtiene la app interna que se desbloquea después del login.
+const finflowAppShell = document.getElementById("finflowAppShell");
+
+// Obtiene la tarjeta donde se muestra la sesión activa.
+const sessionRoleCard = document.getElementById("sessionRoleCard");
+
+// Obtiene el texto donde se coloca el nombre del rol.
+const sessionRoleName = document.getElementById("sessionRoleName");
+
+// Obtiene el texto donde se coloca la descripción del rol.
+const sessionRoleDescription = document.getElementById("sessionRoleDescription");
+
+// Obtiene el botón para cerrar sesión.
+const logoutExperienceButton = document.getElementById("logoutExperienceButton");
+
+// Obtiene el selector de IA por rol, si existe en el HTML.
+const roleAiSelect = document.getElementById("roleAiSelect");
+
+// Obtiene el cuadro donde se muestra la respuesta de IA por rol, si existe.
+const roleAiResponse = document.getElementById("roleAiResponse");
+
+// Función que personaliza textos de formularios según el usuario.
+function customizeFormsByRole(username) {
+    const incomeDescription = document.getElementById("incomeDescription"); // Input de descripción de ingreso.
+    const incomeCategory = document.getElementById("incomeCategory"); // Input de categoría de ingreso.
+    const expenseDescription = document.getElementById("expenseDescription"); // Input de descripción de gasto.
+    const expenseCategory = document.getElementById("expenseCategory"); // Input de categoría de gasto.
+    const assistantLine = document.getElementById("assistantLine"); // Mensaje principal del asistente.
+
+    if (username === "empleado") { // Personaliza la experiencia del empleado.
+        if (incomeDescription) {
+            incomeDescription.placeholder = "Ejemplo: Venta del día"; // Placeholder enfocado en ventas.
+        }
+
+        if (incomeCategory) {
+            incomeCategory.placeholder = "Ejemplo: Ventas"; // Categoría sugerida.
+        }
+
+        if (expenseDescription) {
+            expenseDescription.placeholder = "Ejemplo: Gasto de caja chica"; // Placeholder enfocado en caja chica.
+        }
+
+        if (expenseCategory) {
+            expenseCategory.placeholder = "Ejemplo: Caja chica"; // Categoría sugerida.
+        }
+
+        if (assistantLine) {
+            assistantLine.textContent = "Puedo ayudarte a registrar ventas, ingresos diarios y gastos de caja chica de forma clara.";
+        }
+    } else { // Para los demás roles, deja placeholders generales.
+        if (incomeDescription) {
+            incomeDescription.placeholder = "Descripción del ingreso";
+        }
+
+        if (incomeCategory) {
+            incomeCategory.placeholder = "Categoría";
+        }
+
+        if (expenseDescription) {
+            expenseDescription.placeholder = "Descripción del gasto";
+        }
+
+        if (expenseCategory) {
+            expenseCategory.placeholder = "Categoría";
+        }
+
+        if (assistantLine) {
+            assistantLine.textContent = roleAiMessages[username];
+        }
+    }
+}
+
+// Función que aplica visualmente el rol del usuario que inició sesión.
+function applyExperienceRole(username) {
+    const user = experienceUsers[username]; // Busca el usuario dentro del diccionario.
+
+    if (!user) { // Si el usuario no existe, detiene la función.
+        return;
+    }
+
+    document.body.classList.add("finflow-session-active"); // Activa el modo app interna en toda la página.
+
+    if (experienceLogin) { // Si existe la tarjeta de login...
+        experienceLogin.style.display = "none"; // La oculta después de iniciar sesión.
+    }
+
+    if (finflowAppShell) { // Si existe la app interna...
+        finflowAppShell.classList.add("is-unlocked"); // La muestra agregando la clase is-unlocked.
+    }
+
+    if (sessionRoleCard) { // Si existe la tarjeta de sesión...
+        sessionRoleCard.hidden = false; // La muestra.
+    }
+
+    if (sessionRoleName) { // Si existe el texto del rol...
+        sessionRoleName.textContent = user.roleName; // Coloca el nombre del rol.
+    }
+
+    if (sessionRoleDescription) { // Si existe la descripción del rol...
+        sessionRoleDescription.textContent = user.description; // Coloca una descripción profesional.
+    }
+
+    // Recorre todos los checkboxes de módulos existentes en la demo.
+    for (let i = 0; i < moduleToggles.length; i++) {
+        const toggle = moduleToggles[i]; // Guarda el checkbox actual.
+        const label = toggle.closest("label"); // Busca el label que contiene ese checkbox.
+        const isAllowed = user.modules.includes(toggle.value); // Verifica si el módulo pertenece al rol.
+
+        toggle.checked = isAllowed; // Activa o desactiva el checkbox según el rol.
+
+        if (label) { // Si el checkbox tiene label...
+            label.style.display = isAllowed ? "flex" : "none"; // Muestra solo módulos permitidos.
+        }
+    }
+
+    if (roleAiSelect && roleAiResponse) { // Si existe el módulo visual de IA por rol...
+        roleAiSelect.value = username; // Selecciona el rol actual.
+        roleAiResponse.textContent = roleAiMessages[username]; // Muestra el mensaje del rol.
+    }
+
+    customizeFormsByRole(username); // Personaliza formularios y asistente según el rol.
+
+    localStorage.setItem("finflowExperienceUser", username); // Guarda la sesión en el navegador.
+
+    if (typeof renderModules === "function") { // Verifica si existe la función que pinta módulos.
+        renderModules(); // Actualiza la vista de módulos activos.
+    }
+
+    window.scrollTo({ // Mueve la pantalla arriba para que parezca cambio de página.
+        top: 0,
+        behavior: "smooth"
+    });
+}
+
+// Escucha cuando el usuario envía el formulario de login.
+if (experienceLoginForm) {
+    experienceLoginForm.addEventListener("submit", function (event) {
+        event.preventDefault(); // Evita que la página se recargue.
+
+        const username = experienceUsername.value.trim().toLowerCase(); // Limpia y normaliza el usuario.
+        const password = experiencePassword.value.trim(); // Limpia la contraseña.
+        const user = experienceUsers[username]; // Busca el usuario ingresado.
+
+        if (!user || user.password !== password) { // Valida usuario y contraseña.
+            experienceLoginError.textContent = "Usuario o contraseña incorrectos."; // Muestra error.
+            return; // Detiene el login.
+        }
+
+        experienceLoginError.textContent = ""; // Limpia cualquier error anterior.
+        applyExperienceRole(username); // Aplica la experiencia según el rol.
+    });
+}
+
+// Escucha el botón de cerrar sesión.
+if (logoutExperienceButton) {
+    logoutExperienceButton.addEventListener("click", function () {
+        localStorage.removeItem("finflowExperienceUser"); // Borra la sesión guardada.
+
+        document.body.classList.remove("finflow-session-active"); // Quita el modo app interna.
+
+        if (finflowAppShell) { // Si existe la app...
+            finflowAppShell.classList.remove("is-unlocked"); // La vuelve a ocultar.
+        }
+
+        if (experienceLogin) { // Si existe el login...
+            experienceLogin.style.display = "grid"; // Lo vuelve a mostrar.
+        }
+
+        if (sessionRoleCard) { // Si existe la tarjeta de sesión...
+            sessionRoleCard.hidden = true; // La vuelve a ocultar.
+        }
+
+        window.scrollTo({ // Regresa arriba de la landing.
+            top: 0,
+            behavior: "smooth"
+        });
+    });
+}
+
+// Escucha cambios manuales en el selector de IA por rol, si ese módulo existe.
+if (roleAiSelect && roleAiResponse) {
+    roleAiSelect.addEventListener("change", function () {
+        const selectedRole = roleAiSelect.value; // Obtiene el rol seleccionado.
+        roleAiResponse.textContent = roleAiMessages[selectedRole]; // Cambia el mensaje de IA.
+    });
+}
+
+// Revisa si ya había una sesión guardada en el navegador.
+const savedExperienceUser = localStorage.getItem("finflowExperienceUser");
+
+// Si había sesión válida, la restaura automáticamente.
+if (savedExperienceUser && experienceUsers[savedExperienceUser]) {
+    applyExperienceRole(savedExperienceUser);
+}
+
+
+
+

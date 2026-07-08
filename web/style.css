@@ -1983,3 +1983,327 @@ a {
     }
 }
 
+/* ===== EXPERIENCIA LOGIN + ROLES ===== */
+/* Este bloque agrega estilos para la nueva experiencia web:
+   login visual, sesión por rol, tarjeta de Neon Cloud e IA por rol. */
+
+
+/* Estiliza la tarjeta grande donde aparece el login de FinFlow OS. */
+.experience-login-card {
+    margin: 0 auto 34px; /* Centra la tarjeta y deja espacio abajo. */
+    max-width: 1180px; /* Limita el ancho para que no ocupe toda la pantalla. */
+    display: grid; /* Divide la tarjeta en columnas. */
+    grid-template-columns: 1fr 420px; /* Columna izquierda flexible y formulario a la derecha. */
+    gap: 28px; /* Espacio entre el texto y el formulario. */
+    padding: 34px; /* Espacio interno de la tarjeta. */
+    border-radius: 36px; /* Bordes redondeados estilo premium. */
+    background: rgba(255, 255, 255, 0.76); /* Fondo blanco semi transparente. */
+    box-shadow: var(--shadow-soft); /* Usa la sombra suave ya definida en el diseño. */
+}
+
+
+/* Estiliza el título principal del bloque de login. */
+.login-copy h3 {
+    font-size: clamp(36px, 5vw, 72px); /* Tamaño adaptable según pantalla. */
+    letter-spacing: -0.06em; /* Ajusta el espaciado para look editorial. */
+    margin-bottom: 14px; /* Separa el título del texto inferior. */
+}
+
+
+/* Estiliza el texto descriptivo del login. */
+.login-copy p {
+    color: var(--muted); /* Usa el color secundario del diseño. */
+    line-height: 1.7; /* Mejora la lectura del párrafo. */
+}
+
+
+/* Organiza el formulario de login en columna. */
+.experience-login-form {
+    display: flex; /* Activa flexbox. */
+    flex-direction: column; /* Coloca inputs y botón uno debajo del otro. */
+    gap: 14px; /* Espacio entre campos. */
+}
+
+
+/* Estiliza cada label del formulario. */
+.experience-login-form label {
+    font-weight: 800; /* Hace fuerte el texto Usuario / Contraseña. */
+    display: flex; /* Permite organizar label e input. */
+    flex-direction: column; /* Input debajo del texto del label. */
+    gap: 8px; /* Espacio entre el texto y el input. */
+}
+
+
+/* Estiliza los inputs del login y el select de IA por rol. */
+.experience-login-form input,
+.role-ai-card select {
+    width: 100%; /* Hace que ocupen todo el ancho disponible. */
+    padding: 15px 18px; /* Espacio interno cómodo. */
+    border-radius: 18px; /* Bordes redondeados. */
+    border: 1px solid rgba(0, 0, 0, 0.12); /* Borde sutil. */
+    font: inherit; /* Hereda la fuente del sitio. */
+    background: white; /* Fondo blanco limpio. */
+}
+
+
+/* Estiliza el botón de entrar y el botón de cerrar sesión. */
+.experience-login-form button,
+.session-role-card button {
+    border: none; /* Quita borde por defecto. */
+    border-radius: 999px; /* Botón completamente redondeado. */
+    padding: 15px 22px; /* Espacio interno del botón. */
+    background: #050505; /* Fondo negro elegante. */
+    color: white; /* Texto blanco. */
+    font-weight: 900; /* Texto fuerte. */
+    cursor: pointer; /* Cambia el cursor al pasar encima. */
+}
+
+
+/* Estiliza el texto pequeño que indica usuarios demo. */
+.login-hint {
+    font-size: 13px; /* Texto más pequeño. */
+    color: var(--muted); /* Color secundario. */
+}
+
+
+/* Estiliza el mensaje de error cuando el login falla. */
+.login-error {
+    color: #b91c1c; /* Rojo para errores. */
+    font-weight: 800; /* Texto fuerte. */
+    min-height: 18px; /* Reserva espacio aunque no haya error. */
+}
+
+
+/* Oculta la app interna antes de iniciar sesión. */
+.finflow-app-shell {
+    display: none; /* La demo no se muestra hasta que el login sea correcto. */
+}
+
+
+/* Muestra la app interna después de iniciar sesión. */
+.finflow-app-shell.is-unlocked {
+    display: grid; /* Recupera el layout tipo grid de la app. */
+}
+
+
+/* Estiliza la tarjeta negra que muestra la sesión activa. */
+.session-role-card {
+    margin-top: 18px; /* Espacio respecto a la tarjeta de usuario. */
+    padding: 18px; /* Espacio interno. */
+    border-radius: 24px; /* Bordes redondeados. */
+    background: #050505; /* Fondo negro premium. */
+    color: white; /* Texto blanco. */
+}
+
+
+/* Estiliza el texto pequeño "Sesión activa". */
+.session-role-card span {
+    color: rgba(255, 255, 255, 0.56); /* Blanco con transparencia. */
+    font-size: 13px; /* Tamaño pequeño. */
+}
+
+
+/* Estiliza el nombre del rol activo. */
+.session-role-card strong {
+    display: block; /* Hace que el rol ocupe su propia línea. */
+    font-size: 24px; /* Tamaño destacado. */
+    margin: 6px 0; /* Espacio arriba y abajo. */
+}
+
+
+/* Estiliza la descripción del rol activo. */
+.session-role-card p {
+    color: rgba(255, 255, 255, 0.7); /* Texto blanco suave. */
+    line-height: 1.5; /* Mejora lectura. */
+    margin-bottom: 14px; /* Espacio antes del botón. */
+}
+
+
+/* Cambia el botón de cerrar sesión para que contraste dentro de la tarjeta negra. */
+.session-role-card button {
+    background: white; /* Fondo blanco. */
+    color: #050505; /* Texto negro. */
+    width: 100%; /* Ocupa todo el ancho de la tarjeta. */
+}
+
+
+/* Ajusta las tarjetas nuevas de Neon e IA por rol. */
+.neon-cloud-card,
+.role-ai-card {
+    position: relative; /* Permite posicionamientos internos si luego se agregan efectos. */
+    overflow: hidden; /* Evita que efectos o sombras se salgan de la tarjeta. */
+}
+
+
+/* Estiliza la cápsula que dice conectado a Neon PostgreSQL. */
+.cloud-status {
+    margin-top: 18px; /* Espacio superior. */
+    padding: 12px 16px; /* Espacio interno. */
+    border-radius: 999px; /* Forma de cápsula. */
+    background: rgba(0, 0, 0, 0.06); /* Fondo gris suave. */
+    display: inline-flex; /* Pone el punto verde y el texto en línea. */
+    align-items: center; /* Centra verticalmente el punto y el texto. */
+    gap: 10px; /* Espacio entre punto y texto. */
+    font-weight: 900; /* Texto fuerte. */
+}
+
+
+/* Estiliza el punto verde de conexión. */
+.cloud-status span {
+    width: 10px; /* Ancho del punto. */
+    height: 10px; /* Alto del punto. */
+    border-radius: 50%; /* Lo convierte en círculo. */
+    background: #4ade80; /* Verde de estado activo. */
+    box-shadow: 0 0 18px rgba(74, 222, 128, 0.8); /* Brillo verde. */
+}
+
+
+/* Organiza las mini métricas dentro de la tarjeta Neon. */
+.cloud-grid {
+    margin-top: 22px; /* Espacio superior. */
+    display: grid; /* Usa grid. */
+    grid-template-columns: repeat(3, 1fr); /* Tres columnas iguales. */
+    gap: 12px; /* Espacio entre columnas. */
+}
+
+
+/* Estiliza cada mini métrica de Neon. */
+.cloud-grid div {
+    padding: 16px; /* Espacio interno. */
+    border-radius: 18px; /* Bordes redondeados. */
+    background: rgba(255, 255, 255, 0.65); /* Fondo blanco translúcido. */
+}
+
+
+/* Estiliza el número o palabra principal de cada métrica. */
+.cloud-grid strong {
+    display: block; /* Coloca el valor en su propia línea. */
+    font-size: 28px; /* Tamaño grande. */
+}
+
+
+/* Estiliza el texto pequeño debajo de cada métrica. */
+.cloud-grid span {
+    color: var(--muted); /* Color secundario. */
+    font-size: 14px; /* Tamaño pequeño. */
+}
+
+
+/* Estiliza la respuesta de IA por rol. */
+.role-ai-response {
+    margin-top: 18px; /* Espacio superior. */
+    padding: 18px; /* Espacio interno. */
+    border-radius: 22px; /* Bordes redondeados. */
+    background: #050505; /* Fondo negro. */
+    color: white; /* Texto blanco. */
+    line-height: 1.6; /* Mejora lectura. */
+}
+
+
+/* Ajuste responsive para pantallas pequeñas. */
+@media (max-width: 900px) {
+    .experience-login-card {
+        grid-template-columns: 1fr; /* En móvil, el login queda en una sola columna. */
+    }
+} 
+
+/* ===== MODO APP INTERNA FINFLOW ===== */
+/* Este bloque hace que, al iniciar sesión, la web deje de verse como landing
+   y se vea como una aplicación interna de empresa. */
+
+
+/* Cuando hay sesión activa, se oculta la barra superior de la landing. */
+body.finflow-session-active .nav-shell {
+    display: none;
+}
+
+
+/* Cuando hay sesión activa, se ocultan todas las secciones principales. */
+body.finflow-session-active .hero-section,
+body.finflow-session-active .marquee-section,
+body.finflow-session-active .manifesto-section,
+body.finflow-session-active .atelier-section,
+body.finflow-session-active .modules-section,
+body.finflow-session-active .demo-section,
+body.finflow-session-active .roles-section,
+body.finflow-session-active .craft-section,
+body.finflow-session-active .future-section,
+body.finflow-session-active .closing-card,
+body.finflow-session-active .site-footer {
+    display: none;
+}
+
+
+/* Cuando hay sesión activa, la sección de app ocupa toda la pantalla. */
+body.finflow-session-active .interactive-app-section {
+    min-height: 100vh;
+    padding: 34px;
+    display: flex;
+    align-items: stretch;
+    justify-content: center;
+}
+
+
+/* Cuando hay sesión activa, se oculta el texto de "Comienza la experiencia". */
+body.finflow-session-active .interactive-app-section > .section-heading {
+    display: none;
+}
+
+
+/* Cuando hay sesión activa, se oculta la tarjeta de login. */
+body.finflow-session-active .experience-login-card {
+    display: none;
+}
+
+
+/* Cuando hay sesión activa, la app se vuelve el centro visual de la pantalla. */
+body.finflow-session-active .finflow-app-shell {
+    width: min(1480px, 100%);
+    min-height: calc(100vh - 68px);
+    margin: 0 auto;
+    display: grid;
+}
+
+
+/* Ajusta el panel interno para que se sienta como sistema real. */
+body.finflow-session-active .app-lab-main {
+    min-height: calc(100vh - 68px);
+}
+
+
+/* Ajusta la barra lateral para que parezca menú interno de aplicación. */
+body.finflow-session-active .app-lab-sidebar {
+    min-height: calc(100vh - 68px);
+}
+
+
+/* Oculta explícitamente el módulo de IA por rol si no debe mostrarse. */
+body.finflow-session-active .module-section[data-module="ia-roles"] {
+    display: none;
+}
+
+
+/* Mejora el título interno para que no parezca una demo pública. */
+body.finflow-session-active .app-user-card strong {
+    font-size: 22px;
+}
+
+
+/* Hace que los formularios se vean más como módulos de trabajo reales. */
+body.finflow-session-active .movement-form h3,
+body.finflow-session-active .movement-panel h3,
+body.finflow-session-active .module-mini-card h3 {
+    letter-spacing: -0.04em;
+}
+
+
+/* Ajuste para móviles cuando la app está abierta. */
+@media (max-width: 900px) {
+    body.finflow-session-active .interactive-app-section {
+        padding: 18px;
+    }
+
+    body.finflow-session-active .finflow-app-shell {
+        min-height: auto;
+    }
+} 

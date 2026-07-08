@@ -34,7 +34,7 @@
             <a href="#futuro">Futuro</a>
         </nav>
 
-        <a href="#demo" class="nav-cta magnetic">Ver experiencia</a>
+        <a href="#app-demo" class="nav-cta magnetic">Comenzar experiencia</a>
     </header>
 
     <main>
@@ -268,7 +268,7 @@
             <div class="modules-grid">
                 <article class="module-card reveal" data-status="mvp" data-module-name="Dashboard">
                     <div class="module-icon">◇</div>
-                    <h3>Dashboard</h3>
+                    <h3>Resumen financiero</h3>
                     <p>Resumen ejecutivo con ingresos, gastos, utilidad y estado financiero.</p>
                     <span>Activo</span>
                 </article>
@@ -506,15 +506,46 @@
 <section class="interactive-app-section" id="app-demo">
     <div class="section-heading reveal">
         <p class="eyebrow">Demo funcional</p>
-        <h2>Prueba el cerebro visual de FinFlow.</h2>
+        <h2>Comienza la experiencia FinFlow.</h2>
         <p>
-            Esta demo permite registrar ingresos y gastos directamente en la página,
-            calcular utilidad y activar módulos visualmente. El Dashboard siempre está visible
-            como pantalla principal, y el resto de módulos aparecen o desaparecen según tu selección.
+            Inicia sesión con un usuario de prueba y entra a una versión visual de FinFlow
+            adaptada por rol. Cada perfil muestra módulos distintos, como si la empresa
+            estuviera usando su propio sistema financiero.
         </p>
     </div>
 
-    <div class="app-lab reveal">
+    <div class="experience-login-card reveal" id="experienceLogin">
+        <div class="login-copy">
+            <p class="eyebrow">Acceso FinFlow OS</p>
+            <h3>Entra a tu empresa.</h3>
+            <p>
+                Usa un rol de prueba para vivir FinFlow como administrador, gerente,
+                contador o empleado. La experiencia cambia según el usuario.
+            </p>
+        </div>
+
+        <form class="experience-login-form" id="experienceLoginForm">
+            <label>
+                Usuario
+                <input type="text" id="experienceUsername" placeholder="admin, gerente, contador o empleado">
+            </label>
+
+            <label>
+                Contraseña
+                <input type="password" id="experiencePassword" placeholder="1234">
+            </label>
+
+            <button type="submit">Entrar a FinFlow</button>
+
+            <p class="login-hint">
+                Usuarios demo: admin / gerente / contador / empleado · contraseña: 1234
+            </p>
+
+            <p class="login-error" id="experienceLoginError"></p>
+        </form>
+    </div>
+
+    <div class="app-lab reveal finflow-app-shell" id="finflowAppShell">
         <div class="app-lab-sidebar">
             <div class="app-user-card">
                 <span class="app-avatar">F</span>
@@ -522,6 +553,13 @@
                     <strong>FinFlow Demo</strong>
                     <p>Empresa: PYME Premium</p>
                 </div>
+            </div>
+
+            <div class="session-role-card" id="sessionRoleCard" hidden>
+                <span>Sesión activa</span>
+                <strong id="sessionRoleName">Administrador</strong>
+                <p id="sessionRoleDescription">Control total del sistema.</p>
+                <button type="button" id="logoutExperienceButton">Cerrar sesión</button>
             </div>
 
             <div class="module-switches">
@@ -575,6 +613,16 @@
                 <label>
                     <input type="checkbox" class="module-toggle" value="inventario">
                     Inventario
+                </label>
+
+                <label>
+                    <input type="checkbox" class="module-toggle" value="neon">
+                    Neon Cloud
+                </label>
+
+                <label>
+                    <input type="checkbox" class="module-toggle" value="ia-roles">
+                    IA por rol
                 </label>
             </div>
 
@@ -717,10 +765,64 @@
                         <p>Control básico para productos, stock y alertas futuras.</p>
                     </article>
                 </section>
+
+                <section class="module-section" data-module="neon">
+                    <article class="module-mini-card neon-cloud-card">
+                        <h3>Neon Cloud</h3>
+                        <p>
+                            FinFlow está preparado para guardar sesiones, usuarios y actividad
+                            empresarial en una base de datos PostgreSQL en la nube.
+                        </p>
+
+                        <div class="cloud-status">
+                            <span></span>
+                            Conectado a Neon PostgreSQL
+                        </div>
+
+                        <div class="cloud-grid">
+                            <div>
+                                <strong>4</strong>
+                                <span>roles</span>
+                            </div>
+
+                            <div>
+                                <strong>SQL</strong>
+                                <span>base cloud</span>
+                            </div>
+
+                            <div>
+                                <strong>24/7</strong>
+                                <span>disponible</span>
+                            </div>
+                        </div>
+                    </article>
+                </section>
+
+                <section class="module-section" data-module="ia-roles">
+                    <article class="module-mini-card role-ai-card">
+                        <h3>IA por rol</h3>
+                        <p>
+                            La inteligencia financiera adapta sus recomendaciones según el tipo
+                            de usuario que inicia sesión.
+                        </p>
+
+                        <select id="roleAiSelect">
+                            <option value="admin">Administrador</option>
+                            <option value="gerente">Gerente</option>
+                            <option value="contador">Contador</option>
+                            <option value="empleado">Empleado</option>
+                        </select>
+
+                        <div class="role-ai-response" id="roleAiResponse">
+                            Como administrador, la IA ayuda a analizar módulos, usuarios,
+                            auditoría y reportes completos.
+                        </div>
+                    </article>
+                </section>
             </div>
         </div>
     </div>
-</section> 
+</section>
             <div class="closing-card reveal">
                 <p class="eyebrow">FinFlow</p>
                 <h2>Una forma más elegante de entender tu empresa.</h2>
