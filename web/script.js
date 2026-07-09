@@ -1,3 +1,32 @@
+
+// ======================================================
+// CERRAR SESIÓN GLOBAL Y SEGURO
+// ======================================================
+// Este bloque captura cualquier botón que diga "Cerrar sesión".
+// No depende de variables internas como experienceApp.
+// Limpia toda la sesión y regresa al login.
+
+document.addEventListener("click", function (event) {
+    const elemento = event.target;
+
+    if (!elemento) {
+        return;
+    }
+
+    const textoBoton = elemento.textContent.trim().toLowerCase();
+
+    if (textoBoton === "cerrar sesión" || textoBoton === "cerrar sesion") {
+        event.preventDefault();
+        event.stopPropagation();
+        event.stopImmediatePropagation();
+
+        localStorage.clear();
+        sessionStorage.clear();
+
+        window.location.href = "/";
+    }
+}, true);
+
 const preloader = document.getElementById("preloader");
 const spotlight = document.getElementById("spotlight");
 const pageProgress = document.getElementById("pageProgress");
@@ -999,48 +1028,115 @@ setTimeout(function () {
 
 // Escucha cuando el usuario envía el formulario de login.
 if (experienceLoginForm) {
-    experienceLoginForm.addEventListener("submit", function (event) {
-        event.preventDefault(); // Evita que la página se recargue.
+    // Conecta el login visual original con Neon.
+// Primero valida contra la base de datos real usando Flask.
+// Si Flask no está disponible, usa el login demo como respaldo.
+experienceLoginForm.addEventListener("submit", async function (event) {
+    event.preventDefault();
 
-        const username = experienceUsername.value.trim().toLowerCase(); // Limpia y normaliza el usuario.
-        const password = experiencePassword.value.trim(); // Limpia la contraseña.
-        const user = experienceUsers[username]; // Busca el usuario ingresado.
+    const inputsLogin = experienceLoginForm.querySelectorAll("input");
 
-        if (!user || user.password !== password) { // Valida usuario y contraseña.
-            experienceLoginError.textContent = "Usuario o contraseña incorrectos."; // Muestra error.
-            return; // Detiene el login.
+    if (inputsLogin.length < 2) {
+        experienceLoginError.textContent = "No se encontraron los campos de usuario y contraseña.";
+        return;
+    }
+
+    const username = inputsLogin[0].value.trim().toLowerCase();
+    const password = inputsLogin[1].value.trim();
+
+    experienceLoginError.textContent = "";
+
+    if (username === "" || password === "") {
+        experienceLoginError.textContent = "Ingrese usuario y contraseña.";
+        return;
+    }
+
+    try {
+        const respuesta = await fetch("/api/login", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                usuario: username,
+                password: password
+            })
+        });
+
+        const datos = await respuesta.json();
+
+        if (datos.success) {
+            localStorage.setItem("finflow_usuario_neon", JSON.stringify(datos.user));
+
+            let usuarioVisual = datos.user.usuario;
+
+            if (datos.user.rol === "administrador" || datos.user.rol === "admin") {
+                usuarioVisual = "admin";
+            } else if (datos.user.rol === "gerente") {
+                usuarioVisual = "gerente";
+            } else if (datos.user.rol === "contador") {
+                usuarioVisual = "contador";
+            } else if (datos.user.rol === "empleado") {
+                usuarioVisual = "empleado";
+            }
+
+            localStorage.setItem("finflow_active_user", usuarioVisual);
+
+            applyExperienceRole(usuarioVisual);
+            startFinflowApp();
+
+            setTimeout(function () {
+                aplicarIdentidadRealNeon();
+                agregarBotonUsuariosAdminNeon();
+            }, 300);
+
+            return;
         }
 
-        experienceLoginError.textContent = ""; // Limpia cualquier error anterior.
-        applyExperienceRole(username); // Aplica la experiencia según el rol.
-    });
+        experienceLoginError.textContent = datos.message || "Usuario o contraseña incorrectos.";
+
+    } catch (error) {
+        console.error(error);
+
+        if (!experienceUsers[username] || experienceUsers[username].password !== password) {
+            experienceLoginError.textContent = "Usuario o contraseña incorrectos.";
+            return;
+        }
+
+        localStorage.setItem("finflow_active_user", username);
+
+        applyExperienceRole(username);
+        startFinflowApp();
+    }
+});
 }
 
 // Escucha el botón de cerrar sesión.
 if (logoutExperienceButton) {
+
+    // Cierra sesión limpiando tanto el usuario demo como el usuario conectado a Neon.
     logoutExperienceButton.addEventListener("click", function () {
-        localStorage.removeItem("finflowExperienceUser"); // Borra la sesión guardada.
+    localStorage.removeItem("finflow_active_user");
+    localStorage.removeItem("finflow_usuario_neon");
+    localStorage.removeItem("finflow_usuario");
+    localStorage.removeItem("finflowActiveUser");
+    localStorage.removeItem("activeUser");
+    localStorage.removeItem("usuarioActivo");
 
-        document.body.classList.remove("finflow-session-active"); // Quita el modo app interna.
+    sessionStorage.clear();
 
-        if (finflowAppShell) { // Si existe la app...
-            finflowAppShell.classList.remove("is-unlocked"); // La vuelve a ocultar.
-        }
+    const inputsLogin = experienceLoginForm.querySelectorAll("input");
 
-        if (experienceLogin) { // Si existe el login...
-            experienceLogin.style.display = "grid"; // Lo vuelve a mostrar.
-        }
-
-        if (sessionRoleCard) { // Si existe la tarjeta de sesión...
-            sessionRoleCard.hidden = true; // La vuelve a ocultar.
-        }
-
-        window.scrollTo({ // Regresa arriba de la landing.
-            top: 0,
-            behavior: "smooth"
-        });
+    inputsLogin.forEach(function (input) {
+        input.value = "";
     });
-}
+
+    experienceLoginError.textContent = "";
+
+    experienceApp.hidden = true;
+    experienceLoginSection.hidden = false;
+});
+} 
 
 // Escucha cambios manuales en el selector de IA por rol, si ese módulo existe.
 if (roleAiSelect && roleAiResponse) {
@@ -2425,3 +2521,372 @@ document.addEventListener("click", function () {
         }
     }, 150);
 });
+
+// ======================================================
+// APLICAR IDENTIDAD REAL DE NEON EN EL DASHBOARD
+// ======================================================
+// Cuando un usuario creado en Neon inicia sesión, el dashboard visual
+// puede abrir como admin, gerente, contador o empleado.
+// Esta función muestra también el usuario real que inició sesión,
+// por ejemplo cam1, su nombre, correo y carnet.
+
+function aplicarIdentidadRealNeon() {
+    const usuarioTexto = localStorage.getItem("finflow_usuario_neon");
+
+    if (!usuarioTexto) {
+        return;
+    }
+
+    let usuarioNeon = null;
+
+    try {
+        usuarioNeon = JSON.parse(usuarioTexto);
+    } catch (error) {
+        return;
+    }
+
+    const posiblesTarjetas = Array.from(document.querySelectorAll("div, section, aside"));
+
+    const tarjetaSesion = posiblesTarjetas.find(function (elemento) {
+        const texto = elemento.textContent || "";
+
+        return texto.includes("Sesión activa") && texto.includes("Cerrar sesión");
+    });
+
+    if (!tarjetaSesion) {
+        return;
+    }
+
+    const tituloRol = Array.from(tarjetaSesion.querySelectorAll("h1, h2, h3")).find(function (titulo) {
+        const texto = titulo.textContent.trim();
+
+        return texto === "Administrador" || texto === "Gerente" || texto === "Contador" || texto === "Empleado";
+    });
+
+    if (tituloRol) {
+        tituloRol.textContent = (usuarioNeon.nombre || usuarioNeon.usuario) + " (" + usuarioNeon.usuario + ")";
+    }
+
+    let detalleNeon = document.getElementById("detalle-identidad-neon");
+
+    if (!detalleNeon) {
+        detalleNeon = document.createElement("div");
+        detalleNeon.id = "detalle-identidad-neon";
+
+        detalleNeon.style.marginTop = "14px";
+        detalleNeon.style.marginBottom = "18px";
+        detalleNeon.style.fontSize = "14px";
+        detalleNeon.style.lineHeight = "1.5";
+        detalleNeon.style.color = "rgba(255,255,255,0.75)";
+        detalleNeon.style.fontWeight = "700";
+
+        const botonCerrar = Array.from(tarjetaSesion.querySelectorAll("button")).find(function (boton) {
+            return boton.textContent.trim().toLowerCase().includes("cerrar");
+        });
+
+        if (botonCerrar) {
+            botonCerrar.insertAdjacentElement("beforebegin", detalleNeon);
+        } else {
+            tarjetaSesion.appendChild(detalleNeon);
+        }
+    }
+
+    detalleNeon.innerHTML = `
+        <div>Rol real: ${usuarioNeon.rol}</div>
+        <div>Usuario: ${usuarioNeon.usuario}</div>
+        <div>Carnet: ${usuarioNeon.carnet || "Sin carnet"}</div>
+        <div>Correo: ${usuarioNeon.correo || "Sin correo"}</div>
+    `;
+}
+
+
+// ======================================================
+// MÓDULO WEB DE ADMINISTRACIÓN DE USUARIOS NEON
+// ======================================================
+// Permite que cualquier usuario con rol administrador pueda crear
+// empleados, contadores, gerentes y administradores desde el dashboard web.
+
+document.addEventListener("click", function (event) {
+    const elemento = event.target;
+
+    if (!elemento) {
+        return;
+    }
+
+    const texto = elemento.textContent.trim().toLowerCase();
+
+    if (texto === "usuarios") {
+        event.preventDefault();
+
+        const usuarioTexto = localStorage.getItem("finflow_usuario_neon");
+
+        if (!usuarioTexto) {
+            alert("Debe iniciar sesión como administrador.");
+            return;
+        }
+
+        let usuarioActual = null;
+
+        try {
+            usuarioActual = JSON.parse(usuarioTexto);
+        } catch (error) {
+            alert("No se pudo leer la sesión actual.");
+            return;
+        }
+
+        const rol = usuarioActual.rol.toLowerCase();
+
+        if (rol !== "administrador" && rol !== "admin") {
+            alert("Solo un administrador puede administrar usuarios.");
+            return;
+        }
+
+        mostrarPanelCrearUsuariosNeon(usuarioActual);
+    }
+});
+
+
+async function mostrarPanelCrearUsuariosNeon(usuarioActual) {
+    let panelAnterior = document.getElementById("panel-admin-usuarios-neon");
+
+    if (panelAnterior) {
+        panelAnterior.remove();
+    }
+
+    const panel = document.createElement("section");
+    panel.id = "panel-admin-usuarios-neon";
+
+    panel.style.background = "white";
+    panel.style.borderRadius = "32px";
+    panel.style.padding = "32px";
+    panel.style.margin = "30px 0";
+    panel.style.boxShadow = "0 25px 70px rgba(0,0,0,0.08)";
+
+    panel.innerHTML = `
+        <h2 style="margin-top:0;">Administración de usuarios</h2>
+        <p style="color:#666; font-weight:700;">
+            Crear usuarios nuevos conectados a Neon.
+        </p>
+
+        <form id="form-crear-usuario-neon" style="
+            display:grid;
+            grid-template-columns:repeat(auto-fit, minmax(220px, 1fr));
+            gap:16px;
+            margin-top:24px;
+        ">
+            <input name="nombre" placeholder="Nombre completo" required style="padding:16px; border-radius:18px; border:1px solid #ddd; font-weight:700;">
+            <input name="correo" placeholder="Correo" required style="padding:16px; border-radius:18px; border:1px solid #ddd; font-weight:700;">
+            <input name="usuario" placeholder="Usuario" required style="padding:16px; border-radius:18px; border:1px solid #ddd; font-weight:700;">
+            <input name="password" placeholder="Contraseña" required type="password" style="padding:16px; border-radius:18px; border:1px solid #ddd; font-weight:700;">
+
+            <select name="rol" required style="padding:16px; border-radius:18px; border:1px solid #ddd; font-weight:700;">
+                <option value="">Seleccione rol</option>
+                <option value="administrador">Administrador</option>
+                <option value="gerente">Gerente</option>
+                <option value="contador">Contador</option>
+                <option value="empleado">Empleado</option>
+            </select>
+
+            <input name="empresa_id" placeholder="Empresa ID, opcional" style="padding:16px; border-radius:18px; border:1px solid #ddd; font-weight:700;">
+
+            <button type="submit" style="
+                border:none;
+                background:#111;
+                color:white;
+                padding:16px;
+                border-radius:999px;
+                font-weight:900;
+                cursor:pointer;
+            ">
+                Crear usuario
+            </button>
+        </form>
+
+        <p id="mensaje-crear-usuario-neon" style="font-weight:900; margin-top:18px;"></p>
+
+        <div id="tabla-usuarios-neon-web" style="margin-top:30px;"></div>
+    `;
+
+    const main = document.querySelector("main") || document.body;
+    main.appendChild(panel);
+
+    panel.scrollIntoView({
+        behavior: "smooth"
+    });
+
+    const form = document.getElementById("form-crear-usuario-neon");
+
+    form.addEventListener("submit", async function (event) {
+        event.preventDefault();
+
+        const formData = new FormData(form);
+
+        const nuevoUsuario = {
+            nombre: formData.get("nombre"),
+            correo: formData.get("correo"),
+            usuario: formData.get("usuario"),
+            password: formData.get("password"),
+            rol: formData.get("rol"),
+            empresa_id: formData.get("empresa_id"),
+            admin_actual: usuarioActual
+        };
+
+        const mensaje = document.getElementById("mensaje-crear-usuario-neon");
+
+        try {
+            const respuesta = await fetch("/api/usuarios", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(nuevoUsuario)
+            });
+
+            const datos = await respuesta.json();
+
+            mensaje.textContent = datos.message;
+
+            if (datos.success) {
+                mensaje.style.color = "green";
+                form.reset();
+                cargarTablaUsuariosNeonWeb();
+            } else {
+                mensaje.style.color = "#b91c1c";
+            }
+
+        } catch (error) {
+            console.error(error);
+            mensaje.textContent = "No se pudo crear el usuario.";
+            mensaje.style.color = "#b91c1c";
+        }
+    });
+
+    cargarTablaUsuariosNeonWeb();
+}
+
+
+async function cargarTablaUsuariosNeonWeb() {
+    const contenedor = document.getElementById("tabla-usuarios-neon-web");
+
+    if (!contenedor) {
+        return;
+    }
+
+    const respuesta = await fetch("/api/usuarios");
+    const usuarios = await respuesta.json();
+
+    let html = `
+        <h3>Usuarios registrados</h3>
+        <div style="overflow-x:auto;">
+        <table style="width:100%; border-collapse:collapse; margin-top:16px;">
+            <thead>
+                <tr>
+                    <th style="text-align:left; padding:12px; border-bottom:1px solid #ddd;">Nombre</th>
+                    <th style="text-align:left; padding:12px; border-bottom:1px solid #ddd;">Correo</th>
+                    <th style="text-align:left; padding:12px; border-bottom:1px solid #ddd;">Usuario</th>
+                    <th style="text-align:left; padding:12px; border-bottom:1px solid #ddd;">Rol</th>
+                    <th style="text-align:left; padding:12px; border-bottom:1px solid #ddd;">Carnet</th>
+                    <th style="text-align:left; padding:12px; border-bottom:1px solid #ddd;">Estado</th>
+                </tr>
+            </thead>
+            <tbody>
+    `;
+
+    usuarios.forEach(function (usuario) {
+        html += `
+            <tr>
+                <td style="padding:12px; border-bottom:1px solid #eee;">${usuario.nombre || "-"}</td>
+                <td style="padding:12px; border-bottom:1px solid #eee;">${usuario.correo || "-"}</td>
+                <td style="padding:12px; border-bottom:1px solid #eee;">${usuario.usuario}</td>
+                <td style="padding:12px; border-bottom:1px solid #eee;">${usuario.rol}</td>
+                <td style="padding:12px; border-bottom:1px solid #eee;">${usuario.carnet || "-"}</td>
+                <td style="padding:12px; border-bottom:1px solid #eee;">${usuario.estado}</td>
+            </tr>
+        `;
+    });
+
+    html += `
+            </tbody>
+        </table>
+        </div>
+    `;
+
+    contenedor.innerHTML = html;
+}
+
+
+// ======================================================
+// BOTÓN VISIBLE DE USUARIOS PARA ADMINISTRADORES
+// ======================================================
+// Agrega un botón "Administrar usuarios" dentro de la tarjeta de sesión
+// solo cuando el usuario real de Neon tiene rol administrador.
+
+function agregarBotonUsuariosAdminNeon() {
+    const usuarioTexto = localStorage.getItem("finflow_usuario_neon");
+
+    if (!usuarioTexto) {
+        return;
+    }
+
+    let usuarioNeon = null;
+
+    try {
+        usuarioNeon = JSON.parse(usuarioTexto);
+    } catch (error) {
+        return;
+    }
+
+    const rol = usuarioNeon.rol.toLowerCase();
+
+    if (rol !== "administrador" && rol !== "admin") {
+        return;
+    }
+
+    if (document.getElementById("boton-admin-usuarios-neon")) {
+        return;
+    }
+
+    const posiblesTarjetas = Array.from(document.querySelectorAll("div, section, aside"));
+
+    const tarjetaSesion = posiblesTarjetas.find(function (elemento) {
+        const texto = elemento.textContent || "";
+
+        return texto.includes("Sesión activa") && texto.includes("Cerrar sesión");
+    });
+
+    if (!tarjetaSesion) {
+        return;
+    }
+
+    const botonCerrar = Array.from(tarjetaSesion.querySelectorAll("button")).find(function (boton) {
+        return boton.textContent.trim().toLowerCase().includes("cerrar");
+    });
+
+    const botonUsuarios = document.createElement("button");
+    botonUsuarios.id = "boton-admin-usuarios-neon";
+    botonUsuarios.textContent = "Administrar usuarios";
+
+    botonUsuarios.style.width = "100%";
+    botonUsuarios.style.marginTop = "18px";
+    botonUsuarios.style.marginBottom = "12px";
+    botonUsuarios.style.padding = "16px";
+    botonUsuarios.style.borderRadius = "999px";
+    botonUsuarios.style.border = "none";
+    botonUsuarios.style.background = "#d6c06a";
+    botonUsuarios.style.color = "#111";
+    botonUsuarios.style.fontWeight = "900";
+    botonUsuarios.style.cursor = "pointer";
+
+    botonUsuarios.addEventListener("click", function (event) {
+        event.preventDefault();
+        event.stopPropagation();
+
+        mostrarPanelCrearUsuariosNeon(usuarioNeon);
+    });
+
+    if (botonCerrar) {
+        botonCerrar.insertAdjacentElement("beforebegin", botonUsuarios);
+    } else {
+        tarjetaSesion.appendChild(botonUsuarios);
+    }
+}
