@@ -1,3 +1,4 @@
+import os
 # Importa Flask, que permite crear una aplicación web en Python.
 # Flask será el servidor que conectará la página web con la base de datos Neon.
 from flask import Flask, request, jsonify, send_from_directory
@@ -296,13 +297,12 @@ def crear_usuario_web():
     })
 
 if __name__ == "__main__":
-
-    # Inicializa la base de datos antes de levantar el servidor.
-    # Esto crea tablas o agrega columnas si todavía no existen.
     inicializar_base_datos()
 
-    # Inicia el servidor Flask en modo debug.
-    # debug=True ayuda durante desarrollo porque muestra errores detallados.
-    # port=5000 indica que la app se abrirá en http://127.0.0.1:5000
-    app.run(debug=True, port=5050) 
-    
+    port = int(os.environ.get("PORT", 5050))
+
+    app.run(
+        host="0.0.0.0",
+        port=port,
+        debug=False
+    )
