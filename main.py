@@ -2,8 +2,16 @@
 # Importa funciones relacionadas con usuarios, inicio de sesión, permisos y administración.
 from usuarios import iniciar_sesion, mostrar_usuario, tiene_permiso, menu_administracion_usuarios
 
+# Importa el menú de administración de usuarios conectado a Neon.
+# Este menú permite crear, listar, buscar, activar y desactivar usuarios directamente en la base de datos.
+from admin_usuarios_db import menu_admin_usuarios_neon
+
+# Importa el menú de reportes mensuales.
+# Este módulo permite mostrar resúmenes financieros filtrados por mes y adaptados según el rol del usuario.
 from reportes_mensuales import menu_reportes_mensuales
 
+# Importa el menú de configuración de empresa.
+# Este módulo permite administrar datos generales de la empresa dentro del sistema.
 from configuracion_empresa import menu_configuracion_empresa
 
 # Importa funciones para obtener, configurar y mostrar los módulos activos del sistema.
@@ -284,7 +292,7 @@ def mostrar_menu(usuario, id_sesion):
 
             # Abre el módulo de administración de usuarios.
             elif accion == "usuarios":
-                menu_administracion_usuarios(usuario)
+                  menu_admin_usuarios_neon(usuario) 
 
             # Muestra el historial de auditoría.
             elif accion == "auditoria":
