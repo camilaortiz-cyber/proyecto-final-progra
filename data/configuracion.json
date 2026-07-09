@@ -1,0 +1,15 @@
+{
+    "dashboard": true,
+    "ingresos": true,
+    "gastos": true,
+    "flujo_caja": true,
+    "reportes": true,
+    "reportes_mensuales": true,
+    "ia_financiera": true,
+    "empresas": true,
+    "clientes": true,
+    "proveedores": true,
+    "presupuestos": true,
+    "metas": true,
+    "alertas": true
+}

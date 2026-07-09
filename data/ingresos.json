@@ -1,0 +1,16 @@
+[
+    {
+        "descripcion": "Ingreso por salario",
+        "categoria": "Salario",
+        "monto": 4400.0,
+        "fecha": "2026-07-03 01:53:32",
+        "creado_por": "admin"
+    },
+    {
+        "descripcion": "Ventas de servicio premium",
+        "categoria": "Ventas",
+        "monto": 8000.0,
+        "fecha": "2026-07-03 02:43:01",
+        "creado_por": "admin"
+    }
+]

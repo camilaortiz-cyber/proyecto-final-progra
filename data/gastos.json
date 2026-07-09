@@ -1,0 +1,23 @@
+[
+    {
+        "descripcion": "Compra de hot dogs",
+        "categoria": "Gustos",
+        "monto": 35.0,
+        "fecha": "2026-07-03 01:53:58",
+        "creado_por": "admin"
+    },
+    {
+        "descripcion": "Pago de campaña digital",
+        "categoria": "Marketing",
+        "monto": 2500.0,
+        "fecha": "2026-07-03 02:43:19",
+        "creado_por": "admin"
+    },
+    {
+        "descripcion": "Pago de software mensual",
+        "categoria": "Servicios",
+        "monto": 1200.0,
+        "fecha": "2026-07-03 02:43:29",
+        "creado_por": "admin"
+    }
+]

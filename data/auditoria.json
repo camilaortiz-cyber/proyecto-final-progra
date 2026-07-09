@@ -1,0 +1,121 @@
+[
+    {
+        "usuario": "admin",
+        "rol": "administrador",
+        "accion": "Inicio de sesión",
+        "detalle": "El usuario ingresó al sistema.",
+        "fecha": "2026-07-03 01:53:12"
+    },
+    {
+        "usuario": "admin",
+        "rol": "administrador",
+        "accion": "Registro de ingreso",
+        "detalle": "Registró ingreso de Q4400.0 en categoría Salario.",
+        "fecha": "2026-07-03 01:53:32"
+    },
+    {
+        "usuario": "admin",
+        "rol": "administrador",
+        "accion": "Registro de gasto",
+        "detalle": "Registró gasto de Q35.0 en categoría Gustos.",
+        "fecha": "2026-07-03 01:53:58"
+    },
+    {
+        "usuario": "admin",
+        "rol": "administrador",
+        "accion": "Inicio de sesión",
+        "detalle": "El usuario ingresó al sistema.",
+        "fecha": "2026-07-03 02:42:09"
+    },
+    {
+        "usuario": "admin",
+        "rol": "administrador",
+        "accion": "Registro de ingreso",
+        "detalle": "Registró ingreso de Q8000.0 en categoría Ventas.",
+        "fecha": "2026-07-03 02:43:01"
+    },
+    {
+        "usuario": "admin",
+        "rol": "administrador",
+        "accion": "Registro de gasto",
+        "detalle": "Registró gasto de Q2500.0 en categoría Marketing.",
+        "fecha": "2026-07-03 02:43:19"
+    },
+    {
+        "usuario": "admin",
+        "rol": "administrador",
+        "accion": "Registro de gasto",
+        "detalle": "Registró gasto de Q1200.0 en categoría Servicios.",
+        "fecha": "2026-07-03 02:43:29"
+    },
+    {
+        "usuario": "admin",
+        "rol": "administrador",
+        "accion": "Inicio de sesión",
+        "detalle": "El usuario ingresó al sistema.",
+        "fecha": "2026-07-03 02:56:26"
+    },
+    {
+        "usuario": "admin",
+        "rol": "administrador",
+        "accion": "Inicio de sesión",
+        "detalle": "El usuario ingresó al sistema.",
+        "fecha": "2026-07-03 03:19:09"
+    },
+    {
+        "usuario": "admin",
+        "rol": "administrador",
+        "accion": "Inicio de sesión",
+        "detalle": "El usuario ingresó al sistema.",
+        "fecha": "2026-07-03 09:00:56"
+    },
+    {
+        "usuario": "admin",
+        "rol": "administrador",
+        "accion": "Inicio de sesión",
+        "detalle": "El usuario ingresó al sistema.",
+        "fecha": "2026-07-03 09:13:25"
+    },
+    {
+        "usuario": "admin",
+        "rol": "administrador",
+        "accion": "Creacion de meta",
+        "detalle": "Se creo meta de ahorro por Q90000.0.",
+        "fecha": "2026-07-03 09:13:45"
+    },
+    {
+        "usuario": "admin",
+        "rol": "administrador",
+        "accion": "Inicio de sesión",
+        "detalle": "El usuario ingresó al sistema.",
+        "fecha": "2026-07-08 09:32:18"
+    },
+    {
+        "usuario": "admin",
+        "rol": "administrador",
+        "accion": "Inicio de sesión",
+        "detalle": "El usuario ingresó al sistema.",
+        "fecha": "2026-07-08 09:47:39"
+    },
+    {
+        "usuario": "admin",
+        "rol": "administrador",
+        "accion": "Inicio de sesion",
+        "detalle": "El usuario inicio la sesion #2.",
+        "fecha": "2026-07-08 09:47:41"
+    },
+    {
+        "usuario": "admin",
+        "rol": "administrador",
+        "accion": "Inicio de sesión",
+        "detalle": "El usuario ingresó al sistema.",
+        "fecha": "2026-07-08 09:55:15"
+    },
+    {
+        "usuario": "admin",
+        "rol": "administrador",
+        "accion": "Inicio de sesion",
+        "detalle": "El usuario inicio la sesion #3.",
+        "fecha": "2026-07-08 09:55:16"
+    }
+]
