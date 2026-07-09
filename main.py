@@ -4,6 +4,8 @@ from usuarios import iniciar_sesion, mostrar_usuario, tiene_permiso, menu_admini
 
 from reportes_mensuales import menu_reportes_mensuales
 
+from configuracion_empresa import menu_configuracion_empresa
+
 # Importa funciones para obtener, configurar y mostrar los módulos activos del sistema.
 from modulos import obtener_modulos, configurar_modulos, mostrar_modulos_activos
 
@@ -204,6 +206,9 @@ def mostrar_menu(usuario, id_sesion):
         if tiene_permiso(usuario, "configuracion"):
             numero = agregar_opcion(opciones, numero, "Configuración de módulos", "configuracion")
 
+        if tiene_permiso(usuario, "configuracion_empresa"):
+            numero = agregar_opcion(opciones, numero, "Configuración de empresa", "configuracion_empresa")
+
         print("0. Cerrar sesión")
 
         # Solicita al usuario seleccionar una opción del menú principal.
@@ -288,6 +293,9 @@ def mostrar_menu(usuario, id_sesion):
             # Abre la configuración de módulos.
             elif accion == "configuracion":
                 configurar_modulos()
+
+            elif accion == "configuracion_empresa":
+                menu_configuracion_empresa(usuario)
 
         # Muestra error si el usuario ingresa una opción que no existe.
         else:

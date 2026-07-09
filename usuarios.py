@@ -78,29 +78,30 @@ def mostrar_usuario(usuario_actual):
 
 
 # Verifica si un usuario tiene permiso para acceder a un módulo.
-def tiene_permiso(usuario, modulo):  # Verifica si un usuario tiene permiso para acceder a un módulo.
-    rol = usuario["rol"]  # Obtiene el rol del usuario actual.
-
-    permisos = {  # Diccionario que define qué módulos puede usar cada rol.
-        "admin": [  # El administrador tiene control total del sistema.
-            "dashboard",
+def tiene_permiso(usuario_actual, modulo):
+    permisos = {
+        "admin": [
+            "usuarios",
             "ingresos",
             "gastos",
-            "flujo_caja",
             "reportes",
-            "ia_financiera",
-            "usuarios",
-            "auditoria",
-            "configuracion",
+            "reportes_mensuales",
+            "ia",
             "empresas",
             "clientes",
             "proveedores",
             "presupuestos",
             "metas",
             "alertas",
+            "sesiones",
+            "configuracion_empresa"
             "sesiones"
             "reportes_mensuales",
         ],
+        "administrador": [
+            "usuarios",
+            "ingresos",
+            "gastos",
 
                 "administrador": [
             "dashboard",
@@ -126,8 +127,25 @@ def tiene_permiso(usuario, modulo):  # Verifica si un usuario tiene permiso para
             "dashboard",
             "flujo_caja",
             "reportes",
-            "ia_financiera",
+            "reportes_mensuales",
+            "ia",
             "empresas",
+            "clientes",
+            "proveedores",
+            "presupuestos",
+            "metas",
+            "alertas",
+            "sesiones",
+            "configuracion_empresa"
+            "alertas"
+            "reportes_mensuales",
+        ],
+        "gerente": [
+            "ingresos",
+            "gastos",
+            "reportes",
+            "reportes_mensuales",
+            "ia",
             "clientes",
             "proveedores",
             "presupuestos",
@@ -135,28 +153,28 @@ def tiene_permiso(usuario, modulo):  # Verifica si un usuario tiene permiso para
             "alertas"
             "reportes_mensuales",
         ],
-
-        "contador": [  # El contador registra y revisa información financiera.
-            "dashboard",
+        "contador": [
             "ingresos",
             "gastos",
-            "flujo_caja",
             "reportes",
-            "ia_financiera",
-            "presupuestos",
-            "metas",
-            "alertas"
             "reportes_mensuales",
+            "presupuestos",
+            "metas"
         ],
-
-        "empleado": [  # El empleado tiene acceso limitado y operativo.
-            "dashboard",
+        "empleado": [
             "ingresos",
-            "gastos",
+            "gastos"
             "ia_financiera"
             "reportes_mensuales",
         ]
     }
+
+    rol = usuario_actual["rol"]
+
+    if rol in permisos:
+        return modulo in permisos[rol]
+
+    return False
 
     if rol not in permisos:  # Si el rol no existe en el diccionario.
         return False  # No se concede permiso.
