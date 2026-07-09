@@ -3,17 +3,16 @@ from data_manager import leer_json, guardar_json
 
 # Importa la función para registrar acciones importantes en el historial de auditoría.
 from auditoria import registrar_auditoria
-
+# Importa la conexión a Neon para validar el inicio de sesión contra la base de datos.
+from db import obtener_conexion 
 
 # Define la ruta del archivo donde se almacenan los usuarios del sistema.
 RUTA_USUARIOS = "data/usuarios.json"
 
 
 # Permite iniciar sesión validando usuario y contraseña.
+# Permite iniciar sesión validando usuario y contraseña contra la base de datos Neon.
 def iniciar_sesion():
-
-    # Lee la lista de usuarios desde el archivo JSON.
-    usuarios = leer_json(RUTA_USUARIOS)
 
     # Muestra el título de la sección de inicio de sesión.
     print("\n===== INICIO DE SESIÓN =====")
@@ -33,20 +32,63 @@ def iniciar_sesion():
         # Solicita la contraseña.
         password = input("Contraseña: ")
 
-        # Recorre cada cuenta registrada en el sistema.
-        for cuenta in usuarios:
+        # Abre conexión con Neon.
+        with obtener_conexion() as conexion:
 
-            # Verifica si el usuario y la contraseña coinciden con una cuenta existente.
-            if cuenta["usuario"] == usuario and cuenta["password"] == password:
+            # Crea un cursor para ejecutar la consulta SQL.
+            with conexion.cursor() as cursor:
 
-                # Muestra un mensaje confirmando el inicio de sesión.
-                print("\nInicio de sesión exitoso.")
+                # Busca un usuario activo que coincida con el usuario y contraseña ingresados.
+                cursor.execute(
+                    """
+                    SELECT usuario, password, rol, activo, estado, nombre, correo, carnet, empresa_id
+                    FROM usuarios_db
+                    WHERE usuario = %s
+                      AND password = %s;
+                    """,
+                    (usuario, password)
+                )
 
-                # Registra en auditoría que el usuario ingresó al sistema.
-                registrar_auditoria(cuenta, "Inicio de sesión", "El usuario ingresó al sistema.")
+                # Obtiene el resultado de la consulta.
+                cuenta = cursor.fetchone()
 
-                # Devuelve la cuenta del usuario autenticado.
-                return cuenta
+        # Si encontró una cuenta con ese usuario y contraseña.
+        if cuenta is not None:
+
+            # Valida si el usuario está activo.
+            activo = cuenta[3]
+            estado = cuenta[4]
+
+            # Si el usuario está desactivado, no permite ingresar.
+            if activo is False or estado == "inactivo":
+                print("Este usuario está inactivo. Contacte al administrador.")
+                return None
+
+            # Crea un diccionario con los datos del usuario.
+            usuario_autenticado = {
+                "usuario": cuenta[0],
+                "password": cuenta[1],
+                "rol": cuenta[2],
+                "activo": cuenta[3],
+                "estado": cuenta[4],
+                "nombre": cuenta[5],
+                "correo": cuenta[6],
+                "carnet": cuenta[7],
+                "empresa_id": cuenta[8]
+            }
+
+            # Muestra un mensaje confirmando el inicio de sesión.
+            print("\nInicio de sesión exitoso.")
+
+            # Registra en auditoría que el usuario ingresó al sistema.
+            registrar_auditoria(
+                usuario_autenticado,
+                "Inicio de sesión",
+                "El usuario ingresó al sistema."
+            )
+
+            # Devuelve el usuario autenticado.
+            return usuario_autenticado
 
         # Muestra un mensaje si las credenciales son incorrectas.
         print("Usuario o contraseña incorrectos.")
@@ -61,7 +103,7 @@ def iniciar_sesion():
     print("\nSe agotaron los intentos.")
 
     # Devuelve None porque no se pudo iniciar sesión.
-    return None
+    return None 
 
 
 # Muestra la información básica del usuario actual.
@@ -78,108 +120,84 @@ def mostrar_usuario(usuario_actual):
 
 
 # Verifica si un usuario tiene permiso para acceder a un módulo.
+# Verifica si un usuario tiene permiso para acceder a un módulo.
 def tiene_permiso(usuario_actual, modulo):
+
+    permisos_admin = [
+        "dashboard",
+        "usuarios",
+        "ingresos",
+        "gastos",
+        "flujo_caja",
+        "reportes",
+        "reportes_mensuales",
+        "ia",
+        "ia_financiera",
+        "auditoria",
+        "configuracion",
+        "configuracion_empresa",
+        "empresas",
+        "clientes",
+        "proveedores",
+        "presupuestos",
+        "metas",
+        "alertas",
+        "sesiones"
+    ]
+
     permisos = {
-        "admin": [
-            "usuarios",
-            "ingresos",
-            "gastos",
-            "reportes",
-            "reportes_mensuales",
-            "ia",
-            "empresas",
-            "clientes",
-            "proveedores",
-            "presupuestos",
-            "metas",
-            "alertas",
-            "sesiones",
-            "configuracion_empresa"
-            "sesiones"
-            "reportes_mensuales",
-        ],
-        "administrador": [
-            "usuarios",
-            "ingresos",
-            "gastos",
+        "admin": permisos_admin,
 
-                "administrador": [
-            "dashboard",
-            "ingresos",
-            "gastos",
-            "flujo_caja",
-            "reportes",
-            "reportes_mensuales",
-            "ia_financiera",
-            "usuarios",
-            "auditoria",
-            "configuracion",
-            "empresas",
-            "clientes",
-            "proveedores",
-            "presupuestos",
-            "metas",
-            "alertas",
-            "sesiones"
-        ],
+        "administrador": permisos_admin,
 
-        "gerente": [  # El gerente ve información para tomar decisiones.
-            "dashboard",
-            "flujo_caja",
-            "reportes",
-            "reportes_mensuales",
-            "ia",
-            "empresas",
-            "clientes",
-            "proveedores",
-            "presupuestos",
-            "metas",
-            "alertas",
-            "sesiones",
-            "configuracion_empresa"
-            "alertas"
-            "reportes_mensuales",
-        ],
         "gerente": [
-            "ingresos",
-            "gastos",
+            "dashboard",
+            "flujo_caja",
             "reportes",
             "reportes_mensuales",
             "ia",
+            "ia_financiera",
+            "empresas",
             "clientes",
             "proveedores",
             "presupuestos",
             "metas",
-            "alertas"
-            "reportes_mensuales",
+            "alertas",
+            "sesiones",
+            "configuracion_empresa"
         ],
+
         "contador": [
+            "dashboard",
             "ingresos",
             "gastos",
+            "flujo_caja",
             "reportes",
             "reportes_mensuales",
+            "ia",
+            "ia_financiera",
             "presupuestos",
-            "metas"
+            "metas",
+            "alertas"
         ],
+
         "empleado": [
+            "dashboard",
             "ingresos",
-            "gastos"
-            "ia_financiera"
+            "gastos",
             "reportes_mensuales",
+            "ia",
+            "ia_financiera"
         ]
     }
 
     rol = usuario_actual["rol"]
 
-    if rol in permisos:
-        return modulo in permisos[rol]
+    if rol not in permisos:
+        return False
 
-    return False
+    return modulo in permisos[rol]
 
-    if rol not in permisos:  # Si el rol no existe en el diccionario.
-        return False  # No se concede permiso.
-
-    return modulo in permisos[rol]  # Devuelve True si el módulo está permitido para ese rol.
 
 # Verifica si un nombre de usuario ya existe en el sistema.
 def usuario_existe(nombre_usuario):
@@ -204,7 +222,7 @@ def usuario_existe(nombre_usuario):
 def validar_rol(rol):
 
     # Define los roles válidos dentro del sistema.
-    roles_validos = ["administrador", "gerente", "contador", "empleado"]
+    roles_validos = ["administrador", "admin", "gerente", "contador", "empleado"]
 
     # Devuelve True si el rol recibido está dentro de la lista de roles válidos.
     return rol in roles_validos
@@ -259,6 +277,16 @@ def crear_usuario(usuario_actual):
     # Solicita el rol del nuevo usuario y lo convierte a minúsculas.
     rol = input("Rol del nuevo usuario: ").lower()
 
+    # Permite elegir el rol usando números.
+    if rol == "1":
+        rol = "administrador"
+    elif rol == "2":
+        rol = "gerente"
+    elif rol == "3":
+        rol = "contador"
+    elif rol == "4":
+        rol = "empleado"
+
     # Valida que el rol ingresado sea permitido.
     if not validar_rol(rol):
 
@@ -267,6 +295,10 @@ def crear_usuario(usuario_actual):
 
         # Devuelve False porque el rol no fue aceptado.
         return False
+
+    # Normaliza admin a administrador para mantener consistencia.
+    if rol == "admin":
+        rol = "administrador"
 
     # Lee la lista actual de usuarios desde el archivo JSON.
     usuarios = leer_json(RUTA_USUARIOS)
